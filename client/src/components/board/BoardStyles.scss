@@ -1,0 +1,9 @@
+$myColor: blue;
+$backgroundColor: red;
+
+.boardDiv {
+  border: 1px solid $myColor;
+  width: 500px;
+  height: 500px;
+  background-color: $backgroundColor;
+}
