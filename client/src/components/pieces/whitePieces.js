@@ -1,10 +1,10 @@
 export const whitePieces = [
-  { king: { position: { num: 5, letter: "a" } } },
-  { queen: { position: { num: 4, letter: "a" } } },
-  { bishop1: { position: { num: 3, letter: "a" } } },
-  { bishop2: { position: { num: 6, letter: "a" } } },
-  { knight1: { position: { num: 2, letter: "a" } } },
-  { knight2: { position: { num: 7, letter: "a" } } },
+  { king: { position: { num: 1, letter: "e" } } },
+  { queen: { position: { num: 1, letter: "d" } } },
+  { bishop1: { position: { num: 1, letter: "c" } } },
+  { bishop2: { position: { num: 1, letter: "f" } } },
+  { knight1: { position: { num: 1, letter: "b" } } },
+  { knight2: { position: { num: 1, letter: "g" } } },
   { rook1: { position: { num: 1, letter: "a" } } },
-  { rook2: { position: { num: 8, letter: "a" } } },
+  { rook2: { position: { num: 1, letter: "h" } } },
 ];

@@ -13,6 +13,19 @@ import w_pawn from "../../assets/white_pieces/white_pawn.svg";
 import w_queen from "../../assets/white_pieces/white_queen.svg";
 import w_rook from "../../assets/white_pieces/white_rook.svg";
 
+// const w_king_img = new Image();
+// w_king_img.src = w_king;
+// const w_queen_img = new Image();
+// w_queen_img.src = w_queen;
+// const w_bishop_img = new Image();
+// w_bishop_img.src = w_bishop;
+// const w_knight_img = new Image();
+// w_knight_img.src = w_knight;
+// const w_rook_img = new Image();
+// w_rook_img.src = w_rook;
+// const w_pawn_img = new Image();
+// w_pawn_img.src = w_pawn;
+
 const white = {
   king: w_king,
   queen: w_queen,
@@ -37,8 +50,6 @@ export const drawPiece = (ctx, width, properties) => {
       ? white[properties.type]
       : black[properties.type];
   const img = new Image();
-  img.onload = () => {
-    ctx.drawImage(img, properties.x, properties.y, width / 8, width / 8);
-  };
   img.src = svgToUse;
+  ctx.drawImage(img, properties.x, properties.y, width / 8, width / 8);
 };

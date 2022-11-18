@@ -8,10 +8,11 @@ export function drawPieces(ctx, width, color) {
   color === "white" ? (pieces = whitePieces) : (pieces = blackPieces);
   pieces.forEach((piece) => {
     const type = Object.keys(piece)[0];
+    if (piece[type].activated) return;
     const square = findCoord(piece[type].position);
     let basicType = type.split(1)[0];
     basicType = basicType.split(2)[0];
-    console.log(basicType);
+
     const properties = {
       type: basicType,
       x: square.coord.x - width / 16,

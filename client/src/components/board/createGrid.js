@@ -9,12 +9,12 @@ export const createGrid = (width) => {
       gridSquares.push({
         coord: {
           x: i * squareWidth + squareRadius,
-          y: j * squareWidth + squareRadius,
+          y: (7 - j) * squareWidth + squareRadius,
         },
-        an: { letter: letters[j], number: i + 1 },
+        an: { letter: letters[i], number: j + 1 },
       });
     }
   }
-  console.log(gridSquares);
+
   return gridSquares;
 };

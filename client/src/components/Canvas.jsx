@@ -3,11 +3,16 @@ import React, { useRef, useEffect } from "react";
 function Canvas({ draw, width, height }) {
   const canvas = useRef();
 
-  useEffect(() => {
+  const tick = () => {
     const context = canvas.current.getContext("2d");
     draw(context);
-  });
-  return <canvas ref={canvas} width={width} height={height} />;
+    requestAnimationFrame(tick);
+  };
+
+  useEffect(() => {
+    requestAnimationFrame(tick);
+  }, []);
+  return <canvas ref={canvas} width={width} height={width} />;
 }
 
 export default Canvas;
