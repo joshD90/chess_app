@@ -4,6 +4,9 @@ export const createGrid = (width) => {
   const gridSquares = [];
   const squareWidth = width / 8;
   const squareRadius = width / 16;
+  //create our grid, i loop covers the x axis, j covers y axis.
+  //we create two properties for x and y coord as well as the conventional algebraic notation
+  //used in chess for ease of use. Each square coord is defined by its center point
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       gridSquares.push({

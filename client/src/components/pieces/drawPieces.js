@@ -2,16 +2,19 @@ import { whitePieces } from "./whitePieces";
 import { blackPieces } from "./blackPieces";
 import { drawPiece } from "./drawPiece";
 import { findCoord } from "./findCoord";
+import { removeNumber } from "./removeNumber";
 
 export function drawPieces(ctx, width, color) {
   let pieces = [];
   color === "white" ? (pieces = whitePieces) : (pieces = blackPieces);
+  //we run through both arrays and draw each piece
   pieces.forEach((piece) => {
-    const type = Object.keys(piece)[0];
-    if (piece[type].activated) return;
-    const square = findCoord(piece[type].position);
-    let basicType = type.split(1)[0];
-    basicType = basicType.split(2)[0];
+    //if the piece has been clicked and dragged then we leave this out of our normal draw function
+    //and let drawMovingPiece function handle drwawing this to the mouse pointer
+    if (piece.activated) return;
+    //this converts our piece notation into the grids x and y position to draw on the board
+    const square = findCoord(piece.position);
+    let basicType = removeNumber(piece.type);
 
     const properties = {
       type: basicType,

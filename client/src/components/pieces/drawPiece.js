@@ -45,11 +45,15 @@ const black = {
 };
 
 export const drawPiece = (ctx, width, properties) => {
+  //dynamically select which image we wish to use
   const svgToUse =
     properties.color === "white"
       ? white[properties.type]
       : black[properties.type];
+  //create a new image class
   const img = new Image();
+  //add the image data to the source
   img.src = svgToUse;
+  //draw that image to the canvas
   ctx.drawImage(img, properties.x, properties.y, width / 8, width / 8);
 };
