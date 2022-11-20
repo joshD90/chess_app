@@ -2,7 +2,10 @@ import { whitePieces } from "../pieces/whitePieces";
 import { blackPieces } from "../pieces/blackPieces";
 import { createGrid } from "../board/createGrid";
 import { checkBoundary } from "./checkBoundary";
-import { drawPieces } from "../pieces/drawPieces";
+import { getLegalMoves } from "../legalMoves/getLegalMoves";
+
+export let legalMoves = [];
+
 //if the user clicks on a piece we set it to activate so that we know whether to draw it on the mouse point or not
 export const activatePiece = (e) => {
   const position = { x: e.clientX, y: e.clientY };
@@ -21,6 +24,12 @@ export const activatePiece = (e) => {
   });
   //if there was no piece on that square we exit the function as nothing needs to be done.
   if (!selectedPiece) return;
+
+  //we check the next square in the direction around this piece
+
+  legalMoves = getLegalMoves(selectedPiece, grid, width);
+  console.log(legalMoves);
+
   //we find the index of the piece so that when we change it we are not just changing the shallow copy of the array
   if (selectedPiece.color === "white") {
     const indexOfPiece = whitePieces.indexOf(selectedPiece);
@@ -39,6 +48,7 @@ export const deactivatePiece = (e) => {
   const allPieces = [...whitePieces, ...blackPieces];
   //we find the element that has the activated property
   const pieceToChange = allPieces.find((piece) => piece.activated === true);
+  if (!pieceToChange) return;
   //we find the index and pass this to our original variable so we are not just changed the shallow copy
   const index =
     pieceToChange.color === "white"
@@ -46,6 +56,22 @@ export const deactivatePiece = (e) => {
       : blackPieces.indexOf(pieceToChange);
   //we see where the mouse pointer is currently so we know which square to change the piece's coordinates to
   const newSquare = checkBoundary(position, grid, width);
+
+  if (
+    !legalMoves.some((move) => {
+      console.log(move);
+      console.log(move.square.an.letter);
+      console.log(newSquare.an.letter);
+      return (
+        move.square.an.letter === newSquare.an.letter &&
+        move.square.an.number === newSquare.an.number
+      );
+    })
+  ) {
+    return pieceToChange.color === "white"
+      ? (whitePieces[index].activated = false)
+      : (blackPieces[index].activated = false);
+  }
   if (pieceToChange.color === "white") {
     whitePieces[index].position.letter = newSquare.an.letter;
     whitePieces[index].position.num = newSquare.an.number;

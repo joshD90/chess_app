@@ -31,7 +31,7 @@ function Board() {
       canvasRef.current.removeEventListener("mousemove", getMousePos);
       canvasRef.current.removeEventListener("mouseup", deactivatePiece);
     };
-  }, [canvasRef]);
+  }, []);
   //this is our main event loop for drawing all our pieces.  This is passed to the canvas component which executes it there where we can access our 2d context
   const draw = (ctx) => {
     drawSquares(ctx, grid, width);
