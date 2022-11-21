@@ -5,7 +5,14 @@ export const getLegalMoves = (currentPiece, grid, width) => {
 
   const legalMoves = [];
   directions.forEach((direction) => {
-    checkNextSquare(currentPiece, width, direction, grid, legalMoves);
+    checkNextSquare(
+      currentPiece,
+      width,
+      direction,
+      grid,
+      legalMoves,
+      currentPiece.range
+    );
   });
 
   return legalMoves;

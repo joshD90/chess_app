@@ -28,7 +28,6 @@ export const activatePiece = (e) => {
   //we check the next square in the direction around this piece
 
   legalMoves = getLegalMoves(selectedPiece, grid, width);
-  console.log(legalMoves);
 
   //we find the index of the piece so that when we change it we are not just changing the shallow copy of the array
   if (selectedPiece.color === "white") {
@@ -59,9 +58,6 @@ export const deactivatePiece = (e) => {
 
   if (
     !legalMoves.some((move) => {
-      console.log(move);
-      console.log(move.square.an.letter);
-      console.log(newSquare.an.letter);
       return (
         move.square.an.letter === newSquare.an.letter &&
         move.square.an.number === newSquare.an.number
@@ -76,9 +72,11 @@ export const deactivatePiece = (e) => {
     whitePieces[index].position.letter = newSquare.an.letter;
     whitePieces[index].position.num = newSquare.an.number;
     whitePieces[index].activated = false;
+    whitePieces[index].firstMove = false;
   } else {
     blackPieces[index].position.letter = newSquare.an.letter;
     blackPieces[index].position.num = newSquare.an.number;
     blackPieces[index].activated = false;
+    blackPieces[index].firstMove = false;
   }
 };

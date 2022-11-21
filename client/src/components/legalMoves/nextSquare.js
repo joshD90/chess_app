@@ -1,62 +1,82 @@
 import { findCoord } from "../pieces/findCoord";
 import { checkSquareOccupied } from "./checkSquareOccupied";
+import {
+  getKnightXDiff,
+  getKnightYDiff,
+  getXDiff,
+  getYDiff,
+} from "./getCoordDiff";
+import { removeNumber } from "../pieces/removeNumber";
 
 export const checkNextSquare = (
   selectedPiece,
   width,
   direction,
   grid,
-  legalMoves
+  legalMoves,
+  range
 ) => {
   const { coord } = findCoord(selectedPiece.position);
+  if (range === 0) return;
 
+  //if there piece is a pawn it has specific movements for first move
+  if (
+    removeNumber(selectedPiece.type) === "pawn" &&
+    selectedPiece.firstMove === true &&
+    (direction === "up" || direction === "down")
+  )
+    range = 2;
+
+  //get the difference between x and y coordinates depending on the direction we wish to move in
   let xDiff;
   let yDiff;
-  //see what change we need to make to the x axis
-  if (direction === "up" || direction === "down") xDiff = 0;
-  if (direction === "left") xDiff = -width / 8;
-  if (direction === "right") xDiff = width / 8;
-
-  if (direction === "diagLeftUp" || direction === "diagLeftDown")
-    xDiff = -width / 8;
-  if (direction === "diagRightUp" || direction === "diagRightDown")
-    xDiff = width / 8;
-
-  //see what change we need to add to the y axis
-  if (direction === "left" || direction === "right") yDiff = 0;
-  if (direction === "up") yDiff = -width / 8;
-  if (direction === "down") yDiff = width / 8;
-  if (direction === "diagLeftUp" || direction === "diagRightUp")
-    yDiff = -width / 8;
-  if (direction === "diagLeftDown" || direction === "diagRightDown")
-    yDiff = width / 8;
+  if (removeNumber(selectedPiece.type) === "knight") {
+    xDiff = getKnightXDiff(direction, width);
+    yDiff = getKnightYDiff(direction, width);
+  } else {
+    xDiff = getXDiff(direction, width);
+    yDiff = getYDiff(direction, width);
+  }
   //x and y coords of the next square in the direction
   const nextSquarePos = { x: coord.x + xDiff, y: coord.y + yDiff };
+
   //see which square in the grid matches with the new square coords
   const nextSquare = grid.find((square) => {
     return (
       square.coord.x === nextSquarePos.x && square.coord.y === nextSquarePos.y
     );
   });
+
   //if the square is not on the board
   if (!nextSquare) return console.log("this square is not part of the grid");
-
+  //count our range down so that it will not iterate further if our piece has gone beyond its range
+  range--;
   const nextSquareStatus = checkSquareOccupied(nextSquare, selectedPiece);
   if (nextSquareStatus === "own") return null;
-  if (nextSquareStatus === "enemy")
+  if (nextSquareStatus === "enemy") {
+    //pawn only can attack in a directional manner
+    if (
+      removeNumber(selectedPiece.type) === "pawn" &&
+      (direction === "up" || direction === "down")
+    )
+      return null;
     return legalMoves.push({ square: nextSquare, status: nextSquareStatus });
+  }
+
   if (nextSquareStatus === "empty") {
     legalMoves.push({ square: nextSquare, status: "empty" });
 
     checkNextSquare(
       {
+        type: selectedPiece.type,
         position: { letter: nextSquare.an.letter, num: nextSquare.an.number },
         color: selectedPiece.color,
       },
       width,
       direction,
       grid,
-      legalMoves
+      legalMoves,
+      range
     );
   }
 };
