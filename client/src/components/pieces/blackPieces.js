@@ -14,6 +14,7 @@ export const blackPieces = [
       "diagRightDown",
     ],
     range: 1,
+    firstMove: true,
   },
   {
     type: "queen",
@@ -93,6 +94,7 @@ export const blackPieces = [
     position: { num: 8, letter: "a" },
     movementDirection: ["up", "down", "right", "left"],
     range: 8,
+    firstMove: true,
   },
   {
     type: "rook2",
@@ -100,6 +102,7 @@ export const blackPieces = [
     position: { num: 8, letter: "h" },
     movementDirection: ["up", "down", "right", "left"],
     range: 8,
+    firstMove: true,
   },
   {
     type: "pawn1",

@@ -48,24 +48,36 @@ export const checkNextSquare = (
   });
 
   //if the square is not on the board
-  if (!nextSquare) return console.log("this square is not part of the grid");
+  if (!nextSquare) return;
   //count our range down so that it will not iterate further if our piece has gone beyond its range
   range--;
   const nextSquareStatus = checkSquareOccupied(nextSquare, selectedPiece);
   if (nextSquareStatus === "own") return null;
   if (nextSquareStatus === "enemy") {
-    //pawn only can attack in a directional manner
+    //pawn only can attack in a diagonal manner so if the enemy is straight on return null
     if (
       removeNumber(selectedPiece.type) === "pawn" &&
       (direction === "up" || direction === "down")
     )
       return null;
+    //add square to our legal moves array
     return legalMoves.push({ square: nextSquare, status: nextSquareStatus });
   }
 
   if (nextSquareStatus === "empty") {
+    //the pawn can only go diagonally if attacking another piece so return null if diag direction leads onto null space
+    if (
+      removeNumber(selectedPiece.type) === "pawn" &&
+      (direction === "diagLeftUp" ||
+        direction === "diagRightUp" ||
+        direction === "diagLeftDown" ||
+        direction === "diagRightDown")
+    ) {
+      return null;
+    }
+    //add the square into our legal moves array
     legalMoves.push({ square: nextSquare, status: "empty" });
-
+    //reiterate back through the process to check the next square in the same direction
     checkNextSquare(
       {
         type: selectedPiece.type,

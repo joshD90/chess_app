@@ -3,6 +3,7 @@ import { blackPieces } from "../pieces/blackPieces";
 import { createGrid } from "../board/createGrid";
 import { checkBoundary } from "./checkBoundary";
 import { getLegalMoves } from "../legalMoves/getLegalMoves";
+import { doCastle } from "./doCastle";
 
 export let legalMoves = [];
 
@@ -68,6 +69,9 @@ export const deactivatePiece = (e) => {
       ? (whitePieces[index].activated = false)
       : (blackPieces[index].activated = false);
   }
+
+  doCastle(newSquare, legalMoves, pieceToChange.color);
+
   if (pieceToChange.color === "white") {
     whitePieces[index].position.letter = newSquare.an.letter;
     whitePieces[index].position.num = newSquare.an.number;
