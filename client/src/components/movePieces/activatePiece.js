@@ -4,6 +4,7 @@ import { createGrid } from "../board/createGrid";
 import { checkBoundary } from "./checkBoundary";
 import { getLegalMoves } from "../legalMoves/getLegalMoves";
 import { doCastle } from "./doCastle";
+import { doTake } from "./doTake";
 
 export let legalMoves = [];
 
@@ -71,6 +72,7 @@ export const deactivatePiece = (e) => {
   }
 
   doCastle(newSquare, legalMoves, pieceToChange.color);
+  doTake(newSquare, legalMoves, pieceToChange.color);
 
   if (pieceToChange.color === "white") {
     whitePieces[index].position.letter = newSquare.an.letter;
