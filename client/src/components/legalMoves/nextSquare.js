@@ -7,6 +7,8 @@ import {
   getYDiff,
 } from "./getCoordDiff";
 import { removeNumber } from "../pieces/removeNumber";
+import { whitePieces } from "../pieces/whitePieces";
+import { blackPieces } from "../pieces/blackPieces";
 
 export const checkNextSquare = (
   selectedPiece,
@@ -17,6 +19,7 @@ export const checkNextSquare = (
   range
 ) => {
   const { coord } = findCoord(selectedPiece.position);
+  //range decreases by 1 every time we recursively call the function and exits the loop when we reach range 0
   if (range === 0) return;
 
   //if there piece is a pawn it has specific movements for first move
@@ -77,6 +80,25 @@ export const checkNextSquare = (
     }
     //add the square into our legal moves array
     legalMoves.push({ square: nextSquare, status: "empty" });
+
+    //update our king's check status
+    const opponentKingColor =
+      selectedPiece.color === "white" ? blackPieces : whitePieces;
+    const opponentKing = opponentKingColor.find(
+      (piece) => piece.type === "king"
+    );
+
+    // const kingCheck = legalMoves.some((move) => {
+    //   return (
+    //     move.square.an.number === opponentKing.position.num &&
+    //     move.square.an.letter === opponentKing.position.letter
+    //   );
+    // });
+    // if (kingCheck === true) {
+    //   opponentKing.inCheck = true;
+    //   console.log("kingCheck is true in nextSquare");
+    // }
+
     //reiterate back through the process to check the next square in the same direction
     checkNextSquare(
       {

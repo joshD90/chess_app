@@ -6,6 +6,7 @@ import { drawSquares } from "./drawSquares";
 import { drawPieces } from "../pieces/drawPieces";
 import { activatePiece, deactivatePiece } from "../movePieces/activatePiece";
 import { drawMovingPiece } from "../movePieces/drawMovingPiece";
+import { drawCheck } from "../pieces/drawCheck";
 
 const width = 600;
 
@@ -35,6 +36,7 @@ function Board() {
   //this is our main event loop for drawing all our pieces.  This is passed to the canvas component which executes it there where we can access our 2d context
   const draw = (ctx) => {
     drawSquares(ctx, grid, width);
+    drawCheck(ctx, grid, width);
     drawPieces(ctx, width, "white");
     drawPieces(ctx, width, "black");
     drawMovingPiece(ctx, width, mousePos);

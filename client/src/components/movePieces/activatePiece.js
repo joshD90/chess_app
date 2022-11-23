@@ -5,6 +5,7 @@ import { checkBoundary } from "./checkBoundary";
 import { getLegalMoves } from "../legalMoves/getLegalMoves";
 import { doCastle } from "./doCastle";
 import { doTake } from "./doTake";
+import { doCheck } from "./doCheck";
 
 export let legalMoves = [];
 
@@ -40,6 +41,7 @@ export const activatePiece = (e) => {
     blackPieces[indexOfPiece].activated = true;
   }
 };
+
 //when we lift the mouse button we wish to drop the piece
 export const deactivatePiece = (e) => {
   const position = { x: e.clientX, y: e.clientY };
@@ -85,4 +87,6 @@ export const deactivatePiece = (e) => {
     blackPieces[index].activated = false;
     blackPieces[index].firstMove = false;
   }
+  doCheck(pieceToChange.color, grid, width);
+  doCheck(pieceToChange.color === "white" ? "black" : "white", grid, width);
 };

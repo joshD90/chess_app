@@ -12,42 +12,24 @@ export const doCastle = (newSquare, legalMoves, color) => {
   //dont carry on any further unless the status of the square is castle
   if (squareLandedOn.status != "castle") return;
 
-  if (color === "white") {
-    if (newSquare.an.letter === "g") {
-      //find index of rook and then update the indices
-      const indexOfRook = whitePieces.indexOf(
-        whitePieces.find(
-          (piece) => piece.position.letter === "h" && piece.position.num === 1
-        )
-      );
-      whitePieces[indexOfRook].position.letter = "f";
-    }
-    if (newSquare.an.letter === "c") {
-      const indexOfRook = whitePieces.indexOf(
-        whitePieces.find(
-          (piece) => piece.position.letter === "a" && piece.position.num === 1
-        )
-      );
-      whitePieces[indexOfRook].position.letter = "d";
-    }
+  const colorToChange = color === "white" ? whitePieces : blackPieces;
+  const row = color === "white" ? 1 : 8;
+  if (newSquare.an.letter === "g") {
+    //find index of rook and then update the element at that index
+    const indexOfRook = colorToChange.indexOf(
+      colorToChange.find(
+        (piece) => piece.position.letter === "h" && piece.position.num === row
+      )
+    );
+    colorToChange[indexOfRook].position.letter = "f";
   }
-  if (color === "black") {
-    if (newSquare.an.letter === "g") {
-      //find index of rook and then update the indices
-      const indexOfRook = blackPieces.indexOf(
-        blackPieces.find(
-          (piece) => piece.position.letter === "h" && piece.position.num === 8
-        )
-      );
-      blackPieces[indexOfRook].position.letter = "f";
-    }
-    if (newSquare.an.letter === "c") {
-      const indexOfRook = blackPieces.indexOf(
-        blackPieces.find(
-          (piece) => piece.position.letter === "a" && piece.position.num === 8
-        )
-      );
-      blackPieces[indexOfRook].position.letter = "d";
-    }
+  //if the square that the king is landing on is a "c" then we change the rook on the a row
+  if (newSquare.an.letter === "c") {
+    const indexOfRook = colorToChange.indexOf(
+      colorToChange.find(
+        (piece) => piece.position.letter === "a" && piece.position.num === row
+      )
+    );
+    colorToChange[indexOfRook].position.letter = "d";
   }
 };

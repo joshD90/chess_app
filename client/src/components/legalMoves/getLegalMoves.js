@@ -6,16 +6,13 @@ export const getLegalMoves = (currentPiece, grid, width) => {
 
   const legalMoves = [];
   const legalCastle = addCastleSquares(currentPiece, legalMoves);
-  console.log(legalCastle, "everything that addcastlesquares returns");
+
   legalCastle != undefined &&
     legalCastle.forEach((square) => {
-      console.log(square);
       if (square) {
-        console.log(square, "shouldnt be undefined");
         legalMoves.push(square);
       }
     });
-  console.log(legalMoves, "just after legal castle");
 
   directions.forEach((direction) => {
     checkNextSquare(
@@ -27,6 +24,6 @@ export const getLegalMoves = (currentPiece, grid, width) => {
       currentPiece.range
     );
   });
-  console.log(legalMoves);
+
   return legalMoves;
 };
