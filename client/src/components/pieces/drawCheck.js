@@ -8,7 +8,6 @@ export const drawCheck = (ctx, grid, width) => {
   if (kingsInCheck === []) return;
   kingsInCheck.forEach((king) => {
     const kingCoords = findCoord(king.position);
-    console.log(kingCoords);
     ctx.beginPath();
     ctx.fillStyle = "red";
     ctx.fillRect(

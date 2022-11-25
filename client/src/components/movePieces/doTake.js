@@ -1,8 +1,12 @@
-import { whitePieces } from "../pieces/whitePieces";
-import { blackPieces } from "../pieces/blackPieces";
 //when we land on a square that is notified as "enemy" in our legal moves array we remove this corresponding
 //piece from the other colors array
-export const doTake = (newSquare, legalMoves, color) => {
+export const doTake = (
+  newSquare,
+  legalMoves,
+  color,
+  whitePieces,
+  blackPieces
+) => {
   const squareLandedOn = legalMoves.find((move) => {
     return (
       move.square.an.letter === newSquare.an.letter &&

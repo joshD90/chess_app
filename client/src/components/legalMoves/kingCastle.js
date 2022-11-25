@@ -1,22 +1,42 @@
 import { removeNumber } from "../pieces/removeNumber";
-import { whitePieces } from "../pieces/whitePieces";
-import { blackPieces } from "../pieces/blackPieces";
 import { checkSquareOccupied } from "./checkSquareOccupied";
 import { findCoord } from "../pieces/findCoord";
 
-export const addCastleSquares = (selectedPiece, legalMoves, grid, width) => {
+export const addCastleSquares = (
+  selectedPiece,
+  shallowWhitePieces,
+  shallowBlackPieces
+) => {
   if (selectedPiece.type !== "king") return;
   if (!selectedPiece.firstMove) return;
-  const colorToCheck =
-    selectedPiece.color === "white" ? whitePieces : blackPieces;
 
-  const legalCastleLeft = checkLeft(colorToCheck, selectedPiece);
-  const legalCastleRight = checkRight(colorToCheck, selectedPiece);
+  const colorToCheck =
+    selectedPiece.color === "white" ? shallowWhitePieces : shallowBlackPieces;
+
+  const legalCastleLeft = checkLeft(
+    colorToCheck,
+    selectedPiece,
+    shallowWhitePieces,
+    shallowBlackPieces
+  );
+  const legalCastleRight = checkRight(
+    colorToCheck,
+    selectedPiece,
+    shallowWhitePieces,
+    shallowBlackPieces
+  );
+
   return [legalCastleLeft, legalCastleRight];
 };
 
-const checkLeft = (colorToCheck, selectedPiece) => {
+const checkLeft = (
+  colorToCheck,
+  selectedPiece,
+  shallowWhitePieces,
+  shallowBlackPieces
+) => {
   const leftRook = findRook("a", colorToCheck);
+  if (!leftRook) return null;
   if (leftRook.firstMove === false) return null;
   const number = selectedPiece.position.num;
 
@@ -26,17 +46,28 @@ const checkLeft = (colorToCheck, selectedPiece) => {
     { number: number, letter: "b" },
   ];
   const inBetweenStatus = inBetweenSquares.map((square) => {
-    const status = checkSquareOccupied({ an: square }, selectedPiece);
+    const status = checkSquareOccupied(
+      { an: square },
+      selectedPiece,
+      shallowWhitePieces,
+      shallowBlackPieces
+    );
     return status;
   });
   if (!inBetweenStatus.every((elem) => elem === "empty")) return null;
   const castleSquare = findCoord({ letter: "c", num: number });
-  console.log(castleSquare, "the legal square to castle to");
+
   return { square: castleSquare, status: "castle" };
 };
 
-const checkRight = (colorToCheck, selectedPiece) => {
+const checkRight = (
+  colorToCheck,
+  selectedPiece,
+  shallowWhitePieces,
+  shallowBlackPieces
+) => {
   const rightRook = findRook("h", colorToCheck);
+  if (!rightRook) return null;
   if (rightRook.firstMove === false) return null;
   const number = selectedPiece.position.num;
 
@@ -45,12 +76,16 @@ const checkRight = (colorToCheck, selectedPiece) => {
     { number: number, letter: "f" },
   ];
   const inBetweenStatus = inBetweenSquares.map((square) => {
-    const status = checkSquareOccupied({ an: square }, selectedPiece);
+    const status = checkSquareOccupied(
+      { an: square },
+      selectedPiece,
+      shallowWhitePieces,
+      shallowBlackPieces
+    );
     return status;
   });
   if (!inBetweenStatus.every((elem) => elem === "empty")) return null;
   const castleSquare = findCoord({ letter: "g", num: number });
-  console.log(castleSquare, "the legal square to castle to");
   return { square: castleSquare, status: "castle" };
 };
 
@@ -59,5 +94,6 @@ const findRook = (letter, colorPieces) => {
     (piece) =>
       removeNumber(piece.type) === "rook" && piece.position.letter === letter
   );
+
   return rook;
 };

@@ -1,7 +1,9 @@
-import { blackPieces } from "../pieces/blackPieces";
-import { whitePieces } from "../pieces/whitePieces";
-
-export const checkSquareOccupied = (nextSquare, startPiece) => {
+export const checkSquareOccupied = (
+  nextSquare,
+  startPiece,
+  whitePieces,
+  blackPieces
+) => {
   if (
     whitePieces.some(
       (piece) =>

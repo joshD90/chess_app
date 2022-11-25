@@ -28,9 +28,16 @@ export const activatePiece = (e) => {
   //if there was no piece on that square we exit the function as nothing needs to be done.
   if (!selectedPiece) return;
 
-  //we check the next square in the direction around this piece
-
-  legalMoves = getLegalMoves(selectedPiece, grid, width);
+  // //we check the next square in the direction around this piece
+  const shallowWhitePieces = [...whitePieces];
+  const shallowBlackPieces = [...blackPieces];
+  legalMoves = getLegalMoves(
+    selectedPiece,
+    grid,
+    width,
+    shallowWhitePieces,
+    shallowBlackPieces
+  );
 
   //we find the index of the piece so that when we change it we are not just changing the shallow copy of the array
   if (selectedPiece.color === "white") {
@@ -51,6 +58,7 @@ export const deactivatePiece = (e) => {
   const allPieces = [...whitePieces, ...blackPieces];
   //we find the element that has the activated property
   const pieceToChange = allPieces.find((piece) => piece.activated === true);
+
   if (!pieceToChange) return;
   //we find the index and pass this to our original variable so we are not just changed the shallow copy
   const index =
@@ -60,6 +68,7 @@ export const deactivatePiece = (e) => {
   //we see where the mouse pointer is currently so we know which square to change the piece's coordinates to
   const newSquare = checkBoundary(position, grid, width);
 
+  //when we try to drop the piece we want to see whether the new square is contained in the legal moves array
   if (
     !legalMoves.some((move) => {
       return (
@@ -68,13 +77,63 @@ export const deactivatePiece = (e) => {
       );
     })
   ) {
+    //keep the same position but deactivate
     return pieceToChange.color === "white"
       ? (whitePieces[index].activated = false)
       : (blackPieces[index].activated = false);
   }
 
-  doCastle(newSquare, legalMoves, pieceToChange.color);
-  doTake(newSquare, legalMoves, pieceToChange.color);
+  //this holds the castling move logic
+  if (
+    doCastle(newSquare, legalMoves, pieceToChange.color, grid, width) === null
+  ) {
+    return pieceToChange.color === "white"
+      ? (whitePieces[index].activated = false)
+      : (blackPieces[index].activated = false);
+  }
+
+  //we want to see if a piece is in check any time either a white or black piece is moved
+  //we get the proposed position of the piece and plug this into our pieces and then check whether this returns a check
+  //or not before approving the move
+  const changedPiece = {
+    ...pieceToChange,
+    position: {
+      num: newSquare.an.number,
+      letter: newSquare.an.letter,
+    },
+  };
+  //if changing our pieces would give our king a check, we don't carry out the move and return it to its original square
+  if (doCheck(pieceToChange.color, grid, width, changedPiece) === true) {
+    return pieceToChange.color === "white"
+      ? (whitePieces[index].activated = false)
+      : (blackPieces[index].activated = false);
+  } else {
+    //if the move we have done gets us out of check or does not lead us into check then we turn off the check
+    pieceToChange.color === "white"
+      ? (whitePieces.find((piece) => piece.type === "king").inCheck = false)
+      : (blackPieces.find((piece) => piece.type === "king").inCheck = false);
+  }
+
+  //if the proposed move would lead to the other king being in check then we change the state
+  if (
+    doCheck(
+      pieceToChange.color === "white" ? "black" : "white",
+      grid,
+      width,
+      changedPiece
+    ) === true
+  ) {
+    pieceToChange.color === "white"
+      ? (blackPieces.find((piece) => piece.type === "king").inCheck = true)
+      : (whitePieces.find((piece) => piece.type === "king").inCheck = true);
+  } else {
+    pieceToChange.color === "white"
+      ? (blackPieces.find((piece) => piece.type === "king").inCheck = false)
+      : (whitePieces.find((piece) => piece.type === "king").inCheck = false);
+  }
+
+  //this will check whether the piece is moving onto an enemy piece and remove that piece if its on the landing square
+  doTake(newSquare, legalMoves, pieceToChange.color, whitePieces, blackPieces);
 
   if (pieceToChange.color === "white") {
     whitePieces[index].position.letter = newSquare.an.letter;
@@ -87,6 +146,4 @@ export const deactivatePiece = (e) => {
     blackPieces[index].activated = false;
     blackPieces[index].firstMove = false;
   }
-  doCheck(pieceToChange.color, grid, width);
-  doCheck(pieceToChange.color === "white" ? "black" : "white", grid, width);
 };

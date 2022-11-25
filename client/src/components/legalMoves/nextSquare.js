@@ -7,8 +7,6 @@ import {
   getYDiff,
 } from "./getCoordDiff";
 import { removeNumber } from "../pieces/removeNumber";
-import { whitePieces } from "../pieces/whitePieces";
-import { blackPieces } from "../pieces/blackPieces";
 
 export const checkNextSquare = (
   selectedPiece,
@@ -16,7 +14,9 @@ export const checkNextSquare = (
   direction,
   grid,
   legalMoves,
-  range
+  range,
+  whitePieces,
+  blackPieces
 ) => {
   const { coord } = findCoord(selectedPiece.position);
   //range decreases by 1 every time we recursively call the function and exits the loop when we reach range 0
@@ -54,7 +54,12 @@ export const checkNextSquare = (
   if (!nextSquare) return;
   //count our range down so that it will not iterate further if our piece has gone beyond its range
   range--;
-  const nextSquareStatus = checkSquareOccupied(nextSquare, selectedPiece);
+  const nextSquareStatus = checkSquareOccupied(
+    nextSquare,
+    selectedPiece,
+    whitePieces,
+    blackPieces
+  );
   if (nextSquareStatus === "own") return null;
   if (nextSquareStatus === "enemy") {
     //pawn only can attack in a diagonal manner so if the enemy is straight on return null
@@ -88,18 +93,6 @@ export const checkNextSquare = (
       (piece) => piece.type === "king"
     );
 
-    // const kingCheck = legalMoves.some((move) => {
-    //   return (
-    //     move.square.an.number === opponentKing.position.num &&
-    //     move.square.an.letter === opponentKing.position.letter
-    //   );
-    // });
-    // if (kingCheck === true) {
-    //   opponentKing.inCheck = true;
-    //   console.log("kingCheck is true in nextSquare");
-    // }
-
-    //reiterate back through the process to check the next square in the same direction
     checkNextSquare(
       {
         type: selectedPiece.type,
@@ -110,7 +103,9 @@ export const checkNextSquare = (
       direction,
       grid,
       legalMoves,
-      range
+      range,
+      whitePieces,
+      blackPieces
     );
   }
 };
