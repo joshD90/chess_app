@@ -23,6 +23,7 @@ export const getLegalMoves = (
 
   //we then check all directions that our piece can move in and pass our legal moves by reference which will be updated within
   //this function
+
   directions.forEach((direction) => {
     checkNextSquare(
       currentPiece,

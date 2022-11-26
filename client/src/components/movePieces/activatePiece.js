@@ -133,7 +133,15 @@ export const deactivatePiece = (e) => {
   }
 
   //this will check whether the piece is moving onto an enemy piece and remove that piece if its on the landing square
-  doTake(newSquare, legalMoves, pieceToChange.color, whitePieces, blackPieces);
+  doTake(
+    newSquare,
+    legalMoves,
+    pieceToChange,
+    whitePieces,
+    blackPieces,
+    grid,
+    width
+  );
 
   if (pieceToChange.color === "white") {
     whitePieces[index].position.letter = newSquare.an.letter;

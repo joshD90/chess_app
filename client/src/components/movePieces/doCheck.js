@@ -1,6 +1,7 @@
 import { whitePieces } from "../pieces/whitePieces";
 import { blackPieces } from "../pieces/blackPieces";
 import { getLegalMoves } from "../legalMoves/getLegalMoves";
+import { takeInsideCheck } from "./takeInsideCheck";
 
 //when a player drops his piece we want to check whether the other player's king is in check
 export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
@@ -17,6 +18,9 @@ export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
     //we remove the piece's previous entry and sub in its new position
     adjustedWhite.splice(index, 1);
     adjustedWhite.push(pieceChanged);
+
+    //we check to see whether there are pieces we need to remove from the black pieces if that piece has been taken
+    takeInsideCheck(adjustedBlack, pieceChanged);
   }
   //do this for the black pieces as well
   if (pieceChanged.color === "black") {
@@ -25,14 +29,17 @@ export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
     );
     adjustedBlack.splice(index, 1);
     adjustedBlack.push(pieceChanged);
+    takeInsideCheck(adjustedWhite, pieceChanged);
   }
 
   //we find the square where the white or black king is so we can check if they are in the firing line of any other pieces
+  // console.log(JSON.parse(JSON.stringify(adjustedBlack)));
+  // console.log(JSON.parse(JSON.stringify(adjustedBlack)));
   kingSquare =
     colorOfKing === "black"
       ? adjustedBlack.find((piece) => piece.type === "king")
       : adjustedWhite.find((piece) => piece.type === "king");
-
+  console.log(kingSquare, "king square");
   if (
     checkSquareAttacked(
       colorOfKing,
@@ -53,7 +60,7 @@ export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
 
 //if a player wants to castle then we want to update the king position for every square he passes through
 
-const checkSquareAttacked = (
+export const checkSquareAttacked = (
   defendingColor,
   adjustedWhitePieces,
   adjustedBlackPieces,
@@ -67,8 +74,8 @@ const checkSquareAttacked = (
   const opposingPieces =
     defendingColor === "white" ? adjustedBlackPieces : adjustedWhitePieces;
   //gather all the legal moves
-  opposingPieces.forEach((piece) =>
-    legalMovesCumulate.push(
+  opposingPieces.forEach((piece) => {
+    return legalMovesCumulate.push(
       ...getLegalMoves(
         piece,
         grid,
@@ -76,8 +83,8 @@ const checkSquareAttacked = (
         adjustedWhitePieces,
         adjustedBlackPieces
       )
-    )
-  );
+    );
+  });
 
   //we then check is the king square // or any other square a part of this
   const kingCheck = legalMovesCumulate.some((move) => {
