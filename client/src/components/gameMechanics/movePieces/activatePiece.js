@@ -50,7 +50,7 @@ export const activatePiece = (e) => {
 };
 
 //when we lift the mouse button we wish to drop the piece
-export const deactivatePiece = (e) => {
+export const deactivatePiece = (e, socket) => {
   const position = { x: e.clientX, y: e.clientY };
   const grid = createGrid(600);
   const width = 600;
@@ -154,4 +154,5 @@ export const deactivatePiece = (e) => {
     blackPieces[index].activated = false;
     blackPieces[index].firstMove = false;
   }
+  socket.emit("send-message", { white: whitePieces, black: blackPieces });
 };

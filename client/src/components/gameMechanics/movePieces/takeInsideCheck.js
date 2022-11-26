@@ -8,6 +8,6 @@ export const takeInsideCheck = (piecesToChange, movingPiece) => {
     })
   );
   if (index === undefined) return;
-  console.log(index, "index");
+
   piecesToChange.splice(index, 1);
 };

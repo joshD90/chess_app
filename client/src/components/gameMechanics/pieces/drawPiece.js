@@ -1,17 +1,17 @@
-import b_bishop from "../../assets/black_pieces/black_bishop.svg";
-import b_king from "../../assets/black_pieces/black_king.svg";
-import b_knight from "../../assets/black_pieces/black_knight.svg";
-import b_pawn from "../../assets/black_pieces/black_pawn.svg";
-import b_queen from "../../assets/black_pieces/black_queen.svg";
-import b_rook from "../../assets/black_pieces/black_rook.svg";
+import b_bishop from "../../../assets/black_pieces/black_bishop.svg";
+import b_king from "../../../assets/black_pieces/black_king.svg";
+import b_knight from "../../../assets/black_pieces/black_knight.svg";
+import b_pawn from "../../../assets/black_pieces/black_pawn.svg";
+import b_queen from "../../../assets/black_pieces/black_queen.svg";
+import b_rook from "../../../assets/black_pieces/black_rook.svg";
 
 //import white pieces
-import w_bishop from "../../assets/white_pieces/white_bishop.svg";
-import w_king from "../../assets/white_pieces/white_king.svg";
-import w_knight from "../../assets/white_pieces/white_knight.svg";
-import w_pawn from "../../assets/white_pieces/white_pawn.svg";
-import w_queen from "../../assets/white_pieces/white_queen.svg";
-import w_rook from "../../assets/white_pieces/white_rook.svg";
+import w_bishop from "../../../assets/white_pieces/white_bishop.svg";
+import w_king from "../../../assets/white_pieces/white_king.svg";
+import w_knight from "../../../assets/white_pieces/white_knight.svg";
+import w_pawn from "../../../assets/white_pieces/white_pawn.svg";
+import w_queen from "../../../assets/white_pieces/white_queen.svg";
+import w_rook from "../../../assets/white_pieces/white_rook.svg";
 
 const w_king_img = new Image();
 w_king_img.src = w_king;

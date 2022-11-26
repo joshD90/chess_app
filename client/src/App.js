@@ -1,10 +1,12 @@
-import Board from "./components/board/Board";
+import Board from "./components/gameMechanics/board/Board";
+import { SocketProvider } from "./context/SocketContext";
+import BoardContainer from "./components/boardContainer";
 
 function App() {
   return (
-    <div>
-      <Board />
-    </div>
+    <SocketProvider>
+      <BoardContainer />
+    </SocketProvider>
   );
 }
 

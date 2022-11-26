@@ -33,13 +33,12 @@ export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
   }
 
   //we find the square where the white or black king is so we can check if they are in the firing line of any other pieces
-  // console.log(JSON.parse(JSON.stringify(adjustedBlack)));
-  // console.log(JSON.parse(JSON.stringify(adjustedBlack)));
+
   kingSquare =
     colorOfKing === "black"
       ? adjustedBlack.find((piece) => piece.type === "king")
       : adjustedWhite.find((piece) => piece.type === "king");
-  console.log(kingSquare, "king square");
+
   if (
     checkSquareAttacked(
       colorOfKing,
