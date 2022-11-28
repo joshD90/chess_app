@@ -27,13 +27,21 @@ function Board() {
     socket.on("connect", () =>
       console.log("connected to socket.io whoop", socket.id)
     );
+    socket.on("color-set", (colorObj) => {
+      if (socket.id === colorObj.white) {
+        setMyTurn(true);
+        setMyColor("white");
+      }
+      if (socket.id === colorObj.black) {
+        setMyTurn(false);
+        setMyColor("black");
+      }
+    });
     socket.on("update-pieces", (pieces) => {
-      console.log(pieces.white, pieces.black);
-
+      setMyTurn(true);
       whitePieces.splice(0, whitePieces.length - 1, ...pieces.white);
       blackPieces.splice(0, blackPieces.length - 1, ...pieces.black);
     });
-    socket.on("color-set", (colorObj) => {});
     return () => {
       socket.off("connect");
       socket.off("update-pieces");
