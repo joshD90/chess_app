@@ -1,4 +1,10 @@
-import React, { useEffect, useRef, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+  useState,
+} from "react";
 import "./BoardStyles.scss";
 import Canvas from "../../Canvas";
 import { createGrid } from "./createGrid";
@@ -15,6 +21,7 @@ const width = 600;
 
 function Board() {
   const socket = useContext(SocketContext);
+  const [color, setColor] = useState({});
 
   useEffect(() => {
     socket.on("connect", () =>
@@ -26,9 +33,11 @@ function Board() {
       whitePieces.splice(0, whitePieces.length - 1, ...pieces.white);
       blackPieces.splice(0, blackPieces.length - 1, ...pieces.black);
     });
+    socket.on("color-set", (colorObj) => {});
     return () => {
       socket.off("connect");
       socket.off("update-pieces");
+      socket.off("color-set");
     };
   }, [socket]);
 
@@ -38,12 +47,12 @@ function Board() {
 
   const grid = createGrid(width);
   //this runs in our mousemove event listner
-  const getMousePos = useCallback(
-    (e) => {
-      mousePosRef.current = { x: e.clientX, y: e.clientY };
-    },
-    [mousePosRef]
-  );
+  // const getMousePos = useCallback(
+  //   (e) => {
+  //     mousePosRef.current = { x: e.clientX, y: e.clientY };
+  //   },
+  //   [mousePosRef]
+  // );
 
   useEffect(() => {
     const effectCanvasRef = canvasRef;
@@ -53,25 +62,28 @@ function Board() {
     //when our canvas component mounts we add a listener to see what the mouse is doing so that pieces can be moved accordingly
     effectCanvasRef &&
       effectCanvasRef.current.addEventListener("mousedown", activatePiece);
-    effectCanvasRef &&
-      effectCanvasRef.current.addEventListener("mousemove", getMousePos);
+    // effectCanvasRef &&
+    //   effectCanvasRef.current.addEventListener("mousemove", getMousePos);
     effectCanvasRef &&
       effectCanvasRef.current.addEventListener("mouseup", doMouseUp);
     return () => {
       //we remove the event listeners on component dismounted making sure that listeners don't build on top of each other
+
       effectCanvasRef.current.removeEventListener("mousedown", activatePiece);
-      effectCanvasRef.current.removeEventListener("mousemove", getMousePos);
+
+      // effectCanvasRef.current.removeEventListener("mousemove", getMousePos);
+
       effectCanvasRef.current.removeEventListener("mouseup", deactivatePiece);
     };
-  }, [getMousePos, socket]);
+  }, [socket]);
 
   //this is our main event loop for drawing all our pieces.  This is passed to the canvas component which executes it there where we can access our 2d context
-  const draw = (ctx) => {
+  const draw = (ctx, position) => {
     drawSquares(ctx, grid, width);
     drawCheck(ctx, grid, width);
     drawPieces(ctx, width, "white");
     drawPieces(ctx, width, "black");
-    drawMovingPiece(ctx, width, mousePosRef.current);
+    drawMovingPiece(ctx, width, position);
   };
 
   return (
