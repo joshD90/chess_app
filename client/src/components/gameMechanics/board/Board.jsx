@@ -21,7 +21,8 @@ const width = 600;
 
 function Board() {
   const socket = useContext(SocketContext);
-  const [color, setColor] = useState({});
+  const [myTurn, setMyTurn] = useState();
+  const [myColor, setMyColor] = useState();
 
   useEffect(() => {
     socket.on("connect", () =>
