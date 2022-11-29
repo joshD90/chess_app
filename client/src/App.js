@@ -1,12 +1,15 @@
 import Board from "./components/gameMechanics/board/Board";
 import { SocketProvider } from "./context/SocketContext";
 import BoardContainer from "./components/boardContainer";
+import { PlayerContextProvider } from "./context/PlayerContext";
 
 function App() {
   return (
-    <SocketProvider>
-      <BoardContainer />
-    </SocketProvider>
+    <PlayerContextProvider>
+      <SocketProvider>
+        <BoardContainer />
+      </SocketProvider>
+    </PlayerContextProvider>
   );
 }
 

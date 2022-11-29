@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useContext,
-  useCallback,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useContext, useState } from "react";
 import "./BoardStyles.scss";
 import Canvas from "../../Canvas";
 import { createGrid } from "./createGrid";
@@ -16,30 +10,36 @@ import { drawCheck } from "../pieces/drawCheck";
 import { SocketContext } from "../../../context/SocketContext";
 import { blackPieces } from "../pieces/blackPieces";
 import { whitePieces } from "../pieces/whitePieces";
+import { PlayerContext } from "../../../context/PlayerContext";
 
 const width = 600;
 
 function Board() {
   const socket = useContext(SocketContext);
-  const [myTurn, setMyTurn] = useState();
-  const [myColor, setMyColor] = useState();
+
+  const { player, setPlayer } = useContext(PlayerContext);
+  const playerRef = React.createRef();
 
   useEffect(() => {
-    socket.on("connect", () =>
-      console.log("connected to socket.io whoop", socket.id)
-    );
+    socket.on("connect", () => {
+      console.log("connected to socket.io whoop", socket.id);
+      playerRef.current = { turn: false, color: "" };
+    });
     socket.on("color-set", (colorObj) => {
       if (socket.id === colorObj.white) {
-        setMyTurn(true);
-        setMyColor("white");
+        console.log(colorObj, "color-set");
+        console.log(player, "in color-set");
+        console.log("SETTING PLAYER SUPPOSEDLY");
+        playerRef.current.turn = true;
+        playerRef.current.color = "white";
       }
       if (socket.id === colorObj.black) {
-        setMyTurn(false);
-        setMyColor("black");
+        playerRef.current.turn = false;
+        playerRef.current.color = "black";
       }
     });
     socket.on("update-pieces", (pieces) => {
-      setMyTurn(true);
+      playerRef.current.turn = true;
       whitePieces.splice(0, whitePieces.length - 1, ...pieces.white);
       blackPieces.splice(0, blackPieces.length - 1, ...pieces.black);
     });
@@ -48,43 +48,36 @@ function Board() {
       socket.off("update-pieces");
       socket.off("color-set");
     };
-  }, [socket]);
+  }, []);
 
   //create a link to the actual DOM canvas element
   const canvasRef = useRef();
   const mousePosRef = React.createRef();
 
   const grid = createGrid(width);
-  //this runs in our mousemove event listner
-  // const getMousePos = useCallback(
-  //   (e) => {
-  //     mousePosRef.current = { x: e.clientX, y: e.clientY };
-  //   },
-  //   [mousePosRef]
-  // );
-
+  //handles our event listeners
   useEffect(() => {
-    const effectCanvasRef = canvasRef;
+    //get a ref of our div surrouding the canvas
+    const element = canvasRef.current;
+    //drop the piece
     const doMouseUp = (e) => {
-      deactivatePiece(e, socket);
+      deactivatePiece(e, socket, playerRef);
+    };
+    //activate piece
+    const doMouseDown = (e) => {
+      console.log(playerRef.current, "player in mousedown function");
+      playerRef.current &&
+        activatePiece(e, playerRef.current.turn, playerRef.current.color);
     };
     //when our canvas component mounts we add a listener to see what the mouse is doing so that pieces can be moved accordingly
-    effectCanvasRef &&
-      effectCanvasRef.current.addEventListener("mousedown", activatePiece);
-    // effectCanvasRef &&
-    //   effectCanvasRef.current.addEventListener("mousemove", getMousePos);
-    effectCanvasRef &&
-      effectCanvasRef.current.addEventListener("mouseup", doMouseUp);
+    element.addEventListener("mousedown", doMouseDown);
+    element.addEventListener("mouseup", doMouseUp);
     return () => {
       //we remove the event listeners on component dismounted making sure that listeners don't build on top of each other
-
-      effectCanvasRef.current.removeEventListener("mousedown", activatePiece);
-
-      // effectCanvasRef.current.removeEventListener("mousemove", getMousePos);
-
-      effectCanvasRef.current.removeEventListener("mouseup", deactivatePiece);
+      element.removeEventListener("mousedown", activatePiece);
+      element.removeEventListener("mouseup", deactivatePiece);
     };
-  }, [socket]);
+  }, [socket, playerRef.current]);
 
   //this is our main event loop for drawing all our pieces.  This is passed to the canvas component which executes it there where we can access our 2d context
   const draw = (ctx, position) => {

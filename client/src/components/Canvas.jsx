@@ -5,12 +5,15 @@ function Canvas({ draw, width, height }) {
   const [position, setPosition] = useState(null);
   const mousePosRef = React.createRef();
 
-  const doMouseMove = useCallback((e) => {
-    // setPosition((prev) => {
-    //   return { ...prev, x: e.clientX, y: e.clientY };
-    // });
-    mousePosRef.current = { x: e.clientX, y: e.clientY };
-  }, []);
+  const doMouseMove = useCallback(
+    (e) => {
+      // setPosition((prev) => {
+      //   return { ...prev, x: e.clientX, y: e.clientY };
+      // });
+      mousePosRef.current = { x: e.clientX, y: e.clientY };
+    },
+    [mousePosRef]
+  );
 
   useEffect(() => {
     const element = canvas.current;
