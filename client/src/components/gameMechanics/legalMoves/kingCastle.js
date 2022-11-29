@@ -5,7 +5,8 @@ import { findCoord } from "../pieces/findCoord";
 export const addCastleSquares = (
   selectedPiece,
   shallowWhitePieces,
-  shallowBlackPieces
+  shallowBlackPieces,
+  grid
 ) => {
   if (selectedPiece.type !== "king") return;
   if (!selectedPiece.firstMove) return;
@@ -17,13 +18,15 @@ export const addCastleSquares = (
     colorToCheck,
     selectedPiece,
     shallowWhitePieces,
-    shallowBlackPieces
+    shallowBlackPieces,
+    grid
   );
   const legalCastleRight = checkRight(
     colorToCheck,
     selectedPiece,
     shallowWhitePieces,
-    shallowBlackPieces
+    shallowBlackPieces,
+    grid
   );
 
   return [legalCastleLeft, legalCastleRight];
@@ -33,7 +36,8 @@ const checkLeft = (
   colorToCheck,
   selectedPiece,
   shallowWhitePieces,
-  shallowBlackPieces
+  shallowBlackPieces,
+  grid
 ) => {
   const leftRook = findRook("a", colorToCheck);
   if (!leftRook) return null;
@@ -55,7 +59,7 @@ const checkLeft = (
     return status;
   });
   if (!inBetweenStatus.every((elem) => elem === "empty")) return null;
-  const castleSquare = findCoord({ letter: "c", num: number });
+  const castleSquare = findCoord({ letter: "c", num: number }, grid);
 
   return { square: castleSquare, status: "castle" };
 };
@@ -64,7 +68,8 @@ const checkRight = (
   colorToCheck,
   selectedPiece,
   shallowWhitePieces,
-  shallowBlackPieces
+  shallowBlackPieces,
+  grid
 ) => {
   const rightRook = findRook("h", colorToCheck);
   if (!rightRook) return null;
@@ -85,7 +90,7 @@ const checkRight = (
     return status;
   });
   if (!inBetweenStatus.every((elem) => elem === "empty")) return null;
-  const castleSquare = findCoord({ letter: "g", num: number });
+  const castleSquare = findCoord({ letter: "g", num: number }, grid);
   return { square: castleSquare, status: "castle" };
 };
 

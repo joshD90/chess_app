@@ -4,7 +4,7 @@ import { drawPiece } from "./drawPiece";
 import { findCoord } from "./findCoord";
 import { removeNumber } from "./removeNumber";
 
-export function drawPieces(ctx, width, color) {
+export function drawPieces(ctx, width, color, grid) {
   let pieces = [];
   color === "white" ? (pieces = whitePieces) : (pieces = blackPieces);
   //we run through both arrays and draw each piece
@@ -13,7 +13,7 @@ export function drawPieces(ctx, width, color) {
     //and let drawMovingPiece function handle drwawing this to the mouse pointer
     if (piece.activated) return;
     //this converts our piece notation into the grids x and y position to draw on the board
-    const square = findCoord(piece.position);
+    const square = findCoord(piece.position, grid);
     let basicType = removeNumber(piece.type);
 
     const properties = {

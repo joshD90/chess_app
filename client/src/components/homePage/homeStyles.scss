@@ -1,0 +1,143 @@
+$homeBackground: beige;
+
+.homeContainer {
+  background-color: $homeBackground;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.startDiv {
+  width: 60vw;
+  height: 60vh;
+  min-width: 25rem;
+  min-height: 25rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: lightblue;
+}
+
+.nameDiv {
+  width: 90%;
+  height: 40%;
+  background-color: aquamarine;
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    .inputHolder {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 70%;
+      height: 100%;
+      transform: translateY(-20px);
+      label {
+        height: 40px;
+        width: 90%;
+        border-radius: 5px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 10px;
+        margin-bottom: 3px;
+      }
+      input {
+        height: 40px;
+        width: 90%;
+        border: 1px solid gray;
+        border-radius: 5px;
+        padding-left: 20px;
+        font-size: 1rem;
+      }
+    }
+    .buttonDiv {
+      height: 100%;
+      width: 30%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      button {
+        height: 80px;
+        width: 80%;
+        max-width: 200px;
+        background-color: lightgreen;
+        border: 1px solid gray;
+        border-radius: 3px;
+        font-size: 1rem;
+        cursor: pointer;
+        &:hover {
+          background-color: green;
+        }
+      }
+    }
+  }
+}
+
+.startGameDiv {
+  width: 90%;
+  height: 40%;
+  background-color: darkcyan;
+  form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    .selectDiv {
+      width: 70%;
+      height: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transform: translateY(-15px);
+      label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 90%;
+        height: 2.25rem;
+        margin-bottom: 0;
+      }
+      select {
+        height: 2.75rem;
+        width: 90%;
+        font-size: 1rem;
+        border-radius: 3px;
+        border: 1px solid gray;
+      }
+    }
+    .playButtonDiv {
+      height: 100%;
+      width: 30%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      button {
+        height: 80px;
+        width: 80%;
+        max-width: 200px;
+        background-color: lightgreen;
+        border: 1px solid gray;
+        border-radius: 3px;
+        font-size: 1rem;
+        cursor: pointer;
+        &:hover {
+          background-color: green;
+        }
+      }
+    }
+  }
+}

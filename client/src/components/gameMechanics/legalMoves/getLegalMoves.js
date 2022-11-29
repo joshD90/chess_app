@@ -11,7 +11,12 @@ export const getLegalMoves = (
   const directions = currentPiece.movementDirection;
 
   const legalMoves = [];
-  const legalCastle = addCastleSquares(currentPiece, whitePieces, blackPieces);
+  const legalCastle = addCastleSquares(
+    currentPiece,
+    whitePieces,
+    blackPieces,
+    grid
+  );
   //when getting our legal moves we handle the edge case of the castle first.
   //if there are any legal castling squares we add them to our legal squares
   legalCastle != undefined &&

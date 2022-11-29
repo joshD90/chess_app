@@ -18,7 +18,7 @@ export const checkNextSquare = (
   whitePieces,
   blackPieces
 ) => {
-  const { coord } = findCoord(selectedPiece.position);
+  const { coord } = findCoord(selectedPiece.position, grid);
   //range decreases by 1 every time we recursively call the function and exits the loop when we reach range 0
   if (range === 0) return;
 

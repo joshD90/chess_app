@@ -17,6 +17,12 @@ io.on("connection", (socket) => {
   //assign turn to player once room is filled
   assignColor(socket, io);
 
+  //when the user sends over his name we attach it to socket data
+  socket.on("send-name", (name) => {
+    console.log(name, "name from client");
+    socket.data.username = name;
+  });
+
   //on server recieving updated piece positions resend this out to other user in the room
   socket.on("send-message", (message) => {
     socket.to(myRoom).emit("update-pieces", message);

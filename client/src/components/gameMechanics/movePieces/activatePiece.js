@@ -1,6 +1,5 @@
 import { whitePieces } from "../pieces/whitePieces";
 import { blackPieces } from "../pieces/blackPieces";
-import { createGrid } from "../board/createGrid";
 import { checkBoundary } from "./checkBoundary";
 import { getLegalMoves } from "../legalMoves/getLegalMoves";
 import { doCastle } from "./doCastle";
@@ -10,11 +9,11 @@ import { doCheck } from "./doCheck";
 export let legalMoves = [];
 
 //if the user clicks on a piece we set it to activate so that we know whether to draw it on the mouse point or not
-export const activatePiece = (e, myTurn, myColor) => {
+export const activatePiece = (e, myTurn, myColor, grid) => {
   console.log(myTurn, myColor, "my turn in activate");
   if (!myTurn) return;
   const position = { x: e.clientX, y: e.clientY };
-  const grid = createGrid(600);
+
   const width = 600;
   //check all pieces, once we add in user controls we will just be checking either white or black pieces
   const allPieces = myColor === "white" ? whitePieces : blackPieces;
@@ -52,9 +51,9 @@ export const activatePiece = (e, myTurn, myColor) => {
 };
 
 //when we lift the mouse button we wish to drop the piece
-export const deactivatePiece = (e, socket, playerRef) => {
+export const deactivatePiece = (e, socket, playerRef, grid) => {
   const position = { x: e.clientX, y: e.clientY };
-  const grid = createGrid(600);
+
   const width = 600;
   //check all pieces this will be changed once player turns are implemented
   const allPieces = [...whitePieces, ...blackPieces];

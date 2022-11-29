@@ -7,7 +7,7 @@ export const drawCheck = (ctx, grid, width) => {
   const kingsInCheck = allPieces.filter((piece) => piece.inCheck === true);
   if (kingsInCheck === []) return;
   kingsInCheck.forEach((king) => {
-    const kingCoords = findCoord(king.position);
+    const kingCoords = findCoord(king.position, grid);
     ctx.beginPath();
     ctx.fillStyle = "red";
     ctx.fillRect(

@@ -1,4 +1,4 @@
-export const drawSquares = (ctx, gridSquares, width) => {
+export const drawSquares = (ctx, gridSquares, width, playerColor) => {
   const letters = ["a", "b", "c", "d", "e", "f", "g", "h"];
   //for each square we go from the center point and start the square from half the width and height back from that point
   gridSquares.forEach(({ coord, an }, index) => {
