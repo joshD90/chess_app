@@ -1,9 +1,16 @@
 $myColor: blue;
-$backgroundColor: red;
+$backgroundColor: beige;
+
+.boardWrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $backgroundColor;
+}
 
 .boardDiv {
   border: 1px solid $myColor;
-  width: 500px;
-  height: 500px;
   background-color: $backgroundColor;
 }

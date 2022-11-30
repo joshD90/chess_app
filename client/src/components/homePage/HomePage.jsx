@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { SocketContext } from "../../context/SocketContext";
 import "./homeStyles.scss";
 
@@ -6,6 +6,9 @@ function HomePage() {
   const socket = useContext(SocketContext);
   const [name, setName] = useState("");
   const [duration, setDuration] = useState(10);
+  const [serverName, setServerName] = useState("");
+  const [mousePointer, setMousePointer] = useState({ x: "", y: "" });
+  const startDivRef = useRef();
 
   const submitName = (e) => {
     e.preventDefault();
@@ -14,12 +17,32 @@ function HomePage() {
   };
   const submitGame = (e) => {
     e.preventDefault();
-    console.log(socket.data, "in submit game button");
+
+    socket.emit("join-game");
   };
+
+  useEffect(() => {
+    socket.on("set-name", (name) => {
+      console.log(name, "name in set-name");
+      setServerName(name + "is my name");
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    const element = startDivRef.current;
+    const doMouseMove = (e) => {
+      console.log(e.clientX, e.clientY);
+      setMousePointer({ x: e.clientX, y: e.clientY });
+    };
+    element.addEventListener("mousemove", doMouseMove);
+    return () => element.removeEventListener("mousemove", doMouseMove);
+  }, []);
 
   return (
     <div className="homeContainer">
-      <div className="startDiv">
+      <p>{mousePointer.x + "        " + mousePointer.y}</p>
+      <h1>{serverName}</h1>
+      <div className="startDiv" ref={startDivRef}>
         <div className="nameDiv">
           <form onSubmit={submitName}>
             <div className="inputHolder">

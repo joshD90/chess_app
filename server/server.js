@@ -19,8 +19,12 @@ io.on("connection", (socket) => {
 
   //when the user sends over his name we attach it to socket data
   socket.on("send-name", (name) => {
-    console.log(name, "name from client");
     socket.data.username = name;
+    socket.emit("set-name", name);
+  });
+
+  socket.on("join-game", () => {
+    console.log(socket.data, "in join room");
   });
 
   //on server recieving updated piece positions resend this out to other user in the room

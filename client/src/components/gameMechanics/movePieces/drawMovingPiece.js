@@ -6,7 +6,7 @@ import { removeNumber } from "../pieces/removeNumber";
 export const drawMovingPiece = (ctx, width, position) => {
   //if the mouse is not activated as initially it may be a null value exit
   if (!position) return;
-
+  console.log(position, "position in draw moving poiece");
   //search through all our pices so that we know which one to draw
   const allPieces = [...blackPieces, ...whitePieces];
   const activatedPiece = allPieces.find((piece) => piece.activated === true);

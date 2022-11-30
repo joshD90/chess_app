@@ -12,7 +12,10 @@ export let legalMoves = [];
 export const activatePiece = (e, myTurn, myColor, grid) => {
   console.log(myTurn, myColor, "my turn in activate");
   if (!myTurn) return;
-  const position = { x: e.clientX, y: e.clientY };
+  const position = {
+    x: e.clientX - e.target.offsetLeft,
+    y: e.clientY - e.target.offsetTop,
+  };
 
   const width = 600;
   //check all pieces, once we add in user controls we will just be checking either white or black pieces
@@ -52,7 +55,10 @@ export const activatePiece = (e, myTurn, myColor, grid) => {
 
 //when we lift the mouse button we wish to drop the piece
 export const deactivatePiece = (e, socket, playerRef, grid) => {
-  const position = { x: e.clientX, y: e.clientY };
+  const position = {
+    x: e.clientX - e.target.offsetLeft,
+    y: e.clientY - e.target.offsetTop,
+  };
 
   const width = 600;
   //check all pieces this will be changed once player turns are implemented
