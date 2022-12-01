@@ -10,13 +10,6 @@ io.on("connection", (socket) => {
   //this grabs all the rooms that are currently attached to io
   const rooms = io.of("/").adapter.rooms;
 
-  //add this socket to dynamically set rooms
-  assignRooms(socket, rooms);
-  //get our room name so that we can emit events
-  const myRoom = [...socket.rooms][1];
-  //assign turn to player once room is filled
-  assignColor(socket, io);
-
   //when the user sends over his name we attach it to socket data
   socket.on("send-name", (name) => {
     socket.data.username = name;
@@ -25,10 +18,17 @@ io.on("connection", (socket) => {
 
   socket.on("join-game", () => {
     console.log(socket.data, "in join room");
+    //add this socket to dynamically set rooms
+    assignRooms(socket, rooms);
+    //get our room name so that we can emit events
+    const myRoom = [...socket.rooms][1];
+    //assign turn to player once room is filled
+    assignColor(socket, io);
   });
 
   //on server recieving updated piece positions resend this out to other user in the room
   socket.on("send-message", (message) => {
+    const myRoom = [...socket.rooms][1];
     socket.to(myRoom).emit("update-pieces", message);
   });
 });
