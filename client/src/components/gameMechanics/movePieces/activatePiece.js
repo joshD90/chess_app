@@ -8,6 +8,7 @@ import { doCheck } from "./doCheck";
 import { checkPawnQueening } from "../pawnQueening/checkPawnQueening";
 import { selectPawnSub } from "../pawnQueening/selectPawnSub";
 import { doCheckmate } from "./doCheckmate";
+import { doDraw } from "./doDraw";
 
 export let legalMoves = [];
 
@@ -176,6 +177,8 @@ export const deactivatePiece = (e, socket, playerRef, grid, width) => {
       playerRef.current
     ) === true
   )
+    return;
+  if (doDraw(blackPieces, whitePieces, socket, playerRef.current) === true)
     return;
   socket.emit("send-message", { white: whitePieces, black: blackPieces });
   playerRef.current.turn = false;

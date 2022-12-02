@@ -35,11 +35,20 @@ io.on("connection", (socket) => {
   socket.on("checkmated", (obj) => {
     const myRoom = [...socket.rooms][1];
     const winningPlayer = obj.colorCheckmated === "white" ? "black" : "white";
-    console.log("checkmated");
+    //send out the object to both players in the room
     io.to(myRoom).emit("player-win", {
       winningPlayer: winningPlayer,
       finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
       method: "checkmate",
+    });
+  });
+  //see whether there has been a stalemate
+  socket.on("drawn", (obj) => {
+    console.log("drawn");
+    const myRoom = [...socket.rooms][1];
+    io.to(myRoom).emit("player-draw", {
+      finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
+      method: obj.method,
     });
   });
 });

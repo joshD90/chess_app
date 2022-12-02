@@ -36,6 +36,7 @@ function Board() {
   const canvasRef = useRef();
   let grid;
   useEffect(() => {
+    //setting player color and starting off turn.  Create a grid based on the player's color
     socket.on("color-set", (colorObj) => {
       setPlayerName(
         colorObj.names.filter((player) => player.id === socket.id)[0].name
@@ -58,23 +59,31 @@ function Board() {
         playerColor.current = "black";
       }
     });
+    //every turn this is passed over to the other player
     socket.on("update-pieces", (pieces) => {
       playerRef.current.turn = true;
       whitePieces.splice(0, whitePieces.length, ...pieces.white);
       blackPieces.splice(0, blackPieces.length, ...pieces.black);
     });
+    //on winning
     socket.on("player-win", (winObj) => {
       setWinBannerText(
         `${winObj.winningPlayer} is the winner by ${winObj.method}`
       );
-
       whitePieces.splice(0, whitePieces.length, ...winObj.finalPosition.white);
       blackPieces.splice(0, blackPieces.length, ...winObj.finalPosition.black);
+    });
+    //on drawing
+    socket.on("player-draw", (drawObj) => {
+      setWinBannerText(`The Game is a Draw by ${drawObj.method}`);
+      whitePieces.splice(0, whitePieces.length, ...drawObj.finalPosition.white);
+      blackPieces.splice(0, blackPieces.length, ...drawObj.finalPosition.black);
     });
     return () => {
       socket.off("update-pieces");
       socket.off("color-set");
       socket.off("player-win");
+      socket.off("player-draw");
     };
   }, []);
 

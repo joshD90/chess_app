@@ -29,7 +29,7 @@ export const doCheckmate = (socket, colorChecked, grid, width, player) => {
   //see whether the king is in check
   const colorInCheck = colorChecked === "white" ? shallowWhite : shallowBlack;
   const kingChecked = colorInCheck.find((piece) => (piece.type = "king"));
-  if (!kingChecked.inCheck) return;
+
   const allPossiblePositions = [];
 
   //we check all of the legal moves for every piece belonging to the checked king
@@ -44,7 +44,22 @@ export const doCheckmate = (socket, colorChecked, grid, width, player) => {
     );
 
     //if there are no legal moves to be made then this is checkmate
-    if (!legalMoves || legalMoves.length === 0) return (checkmate = true);
+    if (!legalMoves || legalMoves.length === 0) {
+      player.turn = false;
+      checkmate = true;
+      if (!kingChecked.inCheck) {
+        socket.emit("stalemated", {
+          pieces: { black: blackPieces, white: whitePieces },
+        });
+        return (checkmate = false);
+      } else {
+        socket.emit("checkmated", {
+          colorCheckmated: colorChecked,
+          pieces: { black: blackPieces, white: whitePieces },
+        });
+        return (checkmate = false);
+      }
+    }
     //if legal moves can be made then we adjust white and black pieces and check these updated positions
     //to see if the king is still in check
     legalMoves.forEach((move) => {
@@ -88,13 +103,20 @@ export const doCheckmate = (socket, colorChecked, grid, width, player) => {
   });
 
   if (allPossiblePositions.every((elem) => elem === true)) {
-    socket.emit("checkmated", {
-      colorCheckmated: colorChecked,
-      pieces: { black: blackPieces, white: whitePieces },
-    });
     player.turn = false;
     checkmate = true;
+    if (!kingChecked.inCheck) {
+      socket.emit("drawn", {
+        pieces: { black: blackPieces, white: whitePieces },
+        method: "stalemate",
+      });
+    } else {
+      socket.emit("checkmated", {
+        colorCheckmated: colorChecked,
+        pieces: { black: blackPieces, white: whitePieces },
+      });
+    }
   } else checkmate = false;
-  console.log(checkmate, "CHECKMATE AT END OF FUNC");
+
   return checkmate;
 };
