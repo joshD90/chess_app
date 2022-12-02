@@ -1,0 +1,17 @@
+.spinnerDiv {
+  position: fixed;
+  height: 30vh;
+  width: 30vw;
+  top: 50vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  div {
+    width: 10vw;
+    height: 10vh;
+  }
+}

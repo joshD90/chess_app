@@ -31,4 +31,15 @@ io.on("connection", (socket) => {
     const myRoom = [...socket.rooms][1];
     socket.to(myRoom).emit("update-pieces", message);
   });
+  //see whether there has been checkmate or not
+  socket.on("checkmated", (obj) => {
+    const myRoom = [...socket.rooms][1];
+    const winningPlayer = obj.colorCheckmated === "white" ? "black" : "white";
+    console.log("checkmated");
+    io.to(myRoom).emit("player-win", {
+      winningPlayer: winningPlayer,
+      finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
+      method: "checkmate",
+    });
+  });
 });

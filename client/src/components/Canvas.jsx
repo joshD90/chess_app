@@ -3,6 +3,7 @@ import { drawSquares } from "./gameMechanics/board/drawSquares";
 import { drawCheck } from "./gameMechanics/pieces/drawCheck";
 import { drawPieces } from "./gameMechanics/pieces/drawPieces";
 import { drawMovingPiece } from "./gameMechanics/movePieces/drawMovingPiece";
+import { drawPawnOptions } from "./gameMechanics/pawnQueening/drawPawnOptions";
 
 function Canvas({ width, color, grid }) {
   //set up our null canvas ref referencing the canvas element
@@ -23,7 +24,9 @@ function Canvas({ width, color, grid }) {
     drawPieces(ctx, width, "white", grid);
     drawPieces(ctx, width, "black", grid);
     drawMovingPiece(ctx, width, mousePosRef.current);
-  }, [grid, mousePosRef]);
+
+    drawPawnOptions(ctx, color, width);
+  }, [grid, mousePosRef, width, color]);
 
   //runs with every request animation frame. calls recursively
   const tick = () => {
@@ -51,7 +54,7 @@ function Canvas({ width, color, grid }) {
     element.addEventListener("mousemove", doMouseMove);
     //clean up
     return () => element.removeEventListener("mousemove", doMouseMove);
-  }, [canvasRef]);
+  }, [canvasRef, canvasRef.current]);
 
   return <canvas ref={canvasRef} width={width} height={width} />;
 }

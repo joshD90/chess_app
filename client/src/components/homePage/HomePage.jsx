@@ -1,60 +1,55 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
 import "./homeStyles.scss";
 
 function HomePage() {
   const socket = useContext(SocketContext);
   const [name, setName] = useState("");
+  const [nameSubmitted, setNameSubmitted] = useState(false);
   const [duration, setDuration] = useState(10);
-  const [serverName, setServerName] = useState("");
-  const [mousePointer, setMousePointer] = useState({ x: "", y: "" });
-  const startDivRef = useRef();
+  const [startGameHeight, setStartGameHeight] = useState(0);
+  const navigate = useNavigate();
 
   const submitName = (e) => {
     e.preventDefault();
     if (!name || name === "") return;
     socket.emit("send-name", name);
+    setStartGameHeight(40);
+    setNameSubmitted(true);
   };
   const submitGame = (e) => {
     e.preventDefault();
-
     socket.emit("join-game");
+    navigate("/game");
   };
 
   useEffect(() => {
-    socket.on("set-name", (name) => {
-      console.log(name, "name in set-name");
-      setServerName(name + "is my name");
-    });
+    socket.on("set-name", (name) => {});
   }, [socket]);
-
-  useEffect(() => {
-    const element = startDivRef.current;
-    const doMouseMove = (e) => {
-      console.log(e.clientX, e.clientY);
-      setMousePointer({ x: e.clientX, y: e.clientY });
-    };
-    element.addEventListener("mousemove", doMouseMove);
-    return () => element.removeEventListener("mousemove", doMouseMove);
-  }, []);
 
   return (
     <div className="homeContainer">
-      <p>{mousePointer.x + "        " + mousePointer.y}</p>
-      <h1>{serverName}</h1>
-      <div className="startDiv" ref={startDivRef}>
+      <div className="startDiv">
         <div className="nameDiv">
-          <form onSubmit={submitName}>
-            <div className="inputHolder">
-              <label>Please Enter Name Here</label>
-              <input onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div className="buttonDiv">
-              <button type="submit">Submit Name</button>
-            </div>
-          </form>
+          {nameSubmitted === false ? (
+            <form onSubmit={submitName}>
+              <div className="inputHolder">
+                <label>Please Enter Name Here</label>
+                <input onChange={(e) => setName(e.target.value)} />
+              </div>
+              <div className="buttonDiv">
+                <button type="submit">Submit Name</button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <h1>Welcome {name}</h1>
+              <h3>Please Select a Game Duration and Join a Game</h3>
+            </>
+          )}
         </div>
-        <div className="startGameDiv">
+        <div className="startGameDiv" style={{ height: startGameHeight + "%" }}>
           <form onSubmit={submitGame}>
             <div className="selectDiv">
               <label>Select a game duration</label>

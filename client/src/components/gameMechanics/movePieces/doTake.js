@@ -34,7 +34,7 @@ export const doTake = (
   //we need to see whether the king is will be in check before going ahead with the take
   const adjustedWhite = [...whitePieces];
   const adjustedBlack = [...blackPieces];
-  console.log(pieceToChange);
+
   let kingPiece;
   if (pieceToChange.color === "white") {
     adjustedBlack.splice(index, 1);
@@ -42,7 +42,6 @@ export const doTake = (
     adjustedWhite[indexOfPiece].position.letter = newSquare.an.letter;
     adjustedWhite[indexOfPiece].position.num = newSquare.an.number;
     kingPiece = adjustedWhite.find((piece) => (piece.type = "king"));
-    console.log(adjustedWhite === whitePieces ? "the same" : "not the same");
   } else {
     adjustedWhite.splice(index, 1);
     const indexOfPiece = adjustedBlack.indexOf(pieceToChange);
@@ -61,7 +60,6 @@ export const doTake = (
       width
     ) === true
   ) {
-    console.log("true");
     return;
   }
   //splice to mutate the array

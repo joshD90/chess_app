@@ -5,19 +5,25 @@ import { getLegalMoves } from "../legalMoves/getLegalMoves";
 import { doCastle } from "./doCastle";
 import { doTake } from "./doTake";
 import { doCheck } from "./doCheck";
+import { checkPawnQueening } from "../pawnQueening/checkPawnQueening";
+import { selectPawnSub } from "../pawnQueening/selectPawnSub";
+import { doCheckmate } from "./doCheckmate";
 
 export let legalMoves = [];
 
 //if the user clicks on a piece we set it to activate so that we know whether to draw it on the mouse point or not
-export const activatePiece = (e, myTurn, myColor, grid) => {
-  console.log(myTurn, myColor, "my turn in activate");
-  if (!myTurn) return;
+export const activatePiece = (e, player, grid, width, socket) => {
+  const myTurn = player.turn;
+  const myColor = player.color;
   const position = {
     x: e.clientX - e.target.offsetLeft,
     y: e.clientY - e.target.offsetTop,
   };
+  if (!myTurn) return;
 
-  const width = 600;
+  if (checkPawnQueening(myColor))
+    return selectPawnSub(e, position, socket, player, width);
+
   //check all pieces, once we add in user controls we will just be checking either white or black pieces
   const allPieces = myColor === "white" ? whitePieces : blackPieces;
   //see what square we have clicked on
@@ -54,13 +60,12 @@ export const activatePiece = (e, myTurn, myColor, grid) => {
 };
 
 //when we lift the mouse button we wish to drop the piece
-export const deactivatePiece = (e, socket, playerRef, grid) => {
+export const deactivatePiece = (e, socket, playerRef, grid, width) => {
   const position = {
     x: e.clientX - e.target.offsetLeft,
     y: e.clientY - e.target.offsetTop,
   };
 
-  const width = 600;
   //check all pieces this will be changed once player turns are implemented
   const allPieces = [...whitePieces, ...blackPieces];
   //we find the element that has the activated property
@@ -161,6 +166,17 @@ export const deactivatePiece = (e, socket, playerRef, grid) => {
     blackPieces[index].activated = false;
     blackPieces[index].firstMove = false;
   }
+  if (checkPawnQueening(pieceToChange.color)) return;
+  if (
+    doCheckmate(
+      socket,
+      pieceToChange.color === "white" ? "black" : "white",
+      grid,
+      width,
+      playerRef.current
+    ) === true
+  )
+    return;
   socket.emit("send-message", { white: whitePieces, black: blackPieces });
   playerRef.current.turn = false;
 };

@@ -5,6 +5,7 @@ $backgroundColor: beige;
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: $backgroundColor;
@@ -13,4 +14,10 @@ $backgroundColor: beige;
 .boardDiv {
   border: 1px solid $myColor;
   background-color: $backgroundColor;
+}
+
+.topDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

@@ -6,8 +6,8 @@ import { takeInsideCheck } from "./takeInsideCheck";
 //when a player drops his piece we want to check whether the other player's king is in check
 export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
   //grab a shallow copy of our pieces so that we can adjust them without mutating our actual pieces
-  let adjustedWhite = [...whitePieces];
-  let adjustedBlack = [...blackPieces];
+  let adjustedWhite = JSON.parse(JSON.stringify(whitePieces));
+  let adjustedBlack = JSON.parse(JSON.stringify(blackPieces));
   let kingSquare;
 
   //we adjust the shallow copy of our pieces to include the updated piece position

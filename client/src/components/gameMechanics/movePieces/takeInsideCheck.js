@@ -7,7 +7,8 @@ export const takeInsideCheck = (piecesToChange, movingPiece) => {
       );
     })
   );
-  if (index === undefined) return;
+
+  if (index === -1) return;
 
   piecesToChange.splice(index, 1);
 };

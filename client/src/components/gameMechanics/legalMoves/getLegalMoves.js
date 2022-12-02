@@ -1,14 +1,21 @@
 import { checkNextSquare } from "./nextSquare";
 import { addCastleSquares } from "./kingCastle";
+import { removeNumber } from "../pieces/removeNumber";
 
 export const getLegalMoves = (
   currentPiece,
   grid,
   width,
   whitePieces,
-  blackPieces
+  blackPieces,
+  oppSide
 ) => {
-  const directions = currentPiece.movementDirection;
+  let directions;
+  if (removeNumber(currentPiece.type) === "pawn" && oppSide === true) {
+    directions = currentPiece.oppMovementDirection;
+  } else {
+    directions = currentPiece.movementDirection;
+  }
 
   const legalMoves = [];
   const legalCastle = addCastleSquares(
