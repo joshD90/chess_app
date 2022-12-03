@@ -8,7 +8,9 @@ export const doTake = (
   whitePieces,
   blackPieces,
   grid,
-  width
+  width,
+  whitePiecesTaken,
+  blackPiecesTaken
 ) => {
   const squareLandedOn = legalMoves.find((move) => {
     return (
@@ -62,6 +64,10 @@ export const doTake = (
   ) {
     return;
   }
+  //add this taken piece to our respective taken pieces array
+  colorToChange === blackPieces
+    ? blackPiecesTaken.push(colorToChange[index])
+    : whitePiecesTaken.push(colorToChange[index]);
   //splice to mutate the array
   colorToChange.splice(index, 1);
 };

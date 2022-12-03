@@ -1,12 +1,20 @@
 import { removeNumber } from "../pieces/removeNumber";
 
-export const doDraw = (blackPieces, whitePieces, socket, player) => {
+export const doDraw = (
+  blackPieces,
+  whitePieces,
+  socket,
+  player,
+  whitePiecesTaken,
+  blackPiecesTaken
+) => {
   let drawn;
   //this will be triggered on any draw condition
   const sendDraw = () => {
     socket.emit("drawn", {
       pieces: { black: blackPieces, white: whitePieces },
       method: "insufficient material",
+      taken: { white: whitePiecesTaken, black: blackPiecesTaken },
     });
     player.turn = false;
     return true;

@@ -19,5 +19,13 @@ $backgroundColor: beige;
 .topDiv {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+}
+
+.takenDiv {
+  background-color: green;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

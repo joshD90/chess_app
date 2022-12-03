@@ -4,10 +4,11 @@ import Canvas from "../../Canvas";
 import { createGrid } from "./createGrid";
 import { activatePiece, deactivatePiece } from "../movePieces/activatePiece";
 import { SocketContext } from "../../../context/SocketContext";
-import { blackPieces } from "../pieces/blackPieces";
-import { whitePieces } from "../pieces/whitePieces";
+import { blackPieces, blackPiecesTaken } from "../pieces/blackPieces";
+import { whitePieces, whitePiecesTaken } from "../pieces/whitePieces";
 import WaitingSpinner from "./WaitingSpinner";
 import Clock from "./Clock";
+import SideCanvas from "../sideCanvas/SideCanvas";
 
 function Board() {
   const socket = useContext(SocketContext);
@@ -62,8 +63,19 @@ function Board() {
     //every turn this is passed over to the other player
     socket.on("update-pieces", (pieces) => {
       playerRef.current.turn = true;
+
       whitePieces.splice(0, whitePieces.length, ...pieces.white);
       blackPieces.splice(0, blackPieces.length, ...pieces.black);
+      whitePiecesTaken.splice(
+        0,
+        whitePiecesTaken.length,
+        ...pieces.taken.white
+      );
+      blackPiecesTaken.splice(
+        0,
+        blackPiecesTaken.length,
+        ...pieces.taken.black
+      );
     });
     //on winning
     socket.on("player-win", (winObj) => {
@@ -72,12 +84,32 @@ function Board() {
       );
       whitePieces.splice(0, whitePieces.length, ...winObj.finalPosition.white);
       blackPieces.splice(0, blackPieces.length, ...winObj.finalPosition.black);
+      whitePiecesTaken.splice(
+        0,
+        whitePiecesTaken.length,
+        ...winObj.taken.white
+      );
+      blackPiecesTaken.splice(
+        0,
+        blackPiecesTaken.length,
+        ...winObj.taken.black
+      );
     });
     //on drawing
     socket.on("player-draw", (drawObj) => {
       setWinBannerText(`The Game is a Draw by ${drawObj.method}`);
       whitePieces.splice(0, whitePieces.length, ...drawObj.finalPosition.white);
       blackPieces.splice(0, blackPieces.length, ...drawObj.finalPosition.black);
+      whitePiecesTaken.splice(
+        0,
+        whitePiecesTaken.length,
+        ...drawObj.taken.white
+      );
+      blackPiecesTaken.splice(
+        0,
+        blackPiecesTaken.length,
+        ...drawObj.taken.black
+      );
     });
     return () => {
       socket.off("update-pieces");
@@ -122,12 +154,16 @@ function Board() {
             <Clock player={playerRef} />
           </div>
         )}
-        <div className="boardDiv" ref={canvasRef}>
-          <Canvas
-            width={width}
-            grid={passableGrid}
-            color={passableGrid && playerRef.current.color}
-          />
+        <div className="takenDiv">
+          <SideCanvas width={width} color="white" />
+          <div className="boardDiv" ref={canvasRef}>
+            <Canvas
+              width={width}
+              grid={passableGrid}
+              color={passableGrid && playerRef.current.color}
+            />
+          </div>
+          <SideCanvas width={width} color="black" />
         </div>
         <h3>{playerName}</h3>
       </div>

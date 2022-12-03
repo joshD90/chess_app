@@ -21,7 +21,15 @@ import { takeInsideCheck } from "./takeInsideCheck";
 import { checkSquareAttacked } from "./doCheck";
 import { getLegalMoves } from "../legalMoves/getLegalMoves";
 
-export const doCheckmate = (socket, colorChecked, grid, width, player) => {
+export const doCheckmate = (
+  socket,
+  colorChecked,
+  grid,
+  width,
+  player,
+  whitePiecesTaken,
+  blackPiecesTaken
+) => {
   let checkmate;
 
   let shallowWhite = JSON.parse(JSON.stringify(whitePieces));
@@ -44,22 +52,7 @@ export const doCheckmate = (socket, colorChecked, grid, width, player) => {
     );
 
     //if there are no legal moves to be made then this is checkmate
-    if (!legalMoves || legalMoves.length === 0) {
-      player.turn = false;
-      checkmate = true;
-      if (!kingChecked.inCheck) {
-        socket.emit("stalemated", {
-          pieces: { black: blackPieces, white: whitePieces },
-        });
-        return (checkmate = false);
-      } else {
-        socket.emit("checkmated", {
-          colorCheckmated: colorChecked,
-          pieces: { black: blackPieces, white: whitePieces },
-        });
-        return (checkmate = false);
-      }
-    }
+    if (!legalMoves || legalMoves.length === 0) return;
     //if legal moves can be made then we adjust white and black pieces and check these updated positions
     //to see if the king is still in check
     legalMoves.forEach((move) => {
@@ -109,11 +102,13 @@ export const doCheckmate = (socket, colorChecked, grid, width, player) => {
       socket.emit("drawn", {
         pieces: { black: blackPieces, white: whitePieces },
         method: "stalemate",
+        taken: { white: whitePiecesTaken, black: blackPiecesTaken },
       });
     } else {
       socket.emit("checkmated", {
         colorCheckmated: colorChecked,
         pieces: { black: blackPieces, white: whitePieces },
+        taken: { white: whitePiecesTaken, black: blackPiecesTaken },
       });
     }
   } else checkmate = false;

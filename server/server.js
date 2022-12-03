@@ -40,6 +40,7 @@ io.on("connection", (socket) => {
       winningPlayer: winningPlayer,
       finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
       method: "checkmate",
+      taken: { white: obj.taken.white, black: obj.taken.black },
     });
   });
   //see whether there has been a stalemate
@@ -49,6 +50,7 @@ io.on("connection", (socket) => {
     io.to(myRoom).emit("player-draw", {
       finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
       method: obj.method,
+      taken: { white: obj.taken.white, black: obj.taken.black },
     });
   });
 });

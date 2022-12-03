@@ -9,6 +9,8 @@ import { checkPawnQueening } from "../pawnQueening/checkPawnQueening";
 import { selectPawnSub } from "../pawnQueening/selectPawnSub";
 import { doCheckmate } from "./doCheckmate";
 import { doDraw } from "./doDraw";
+import { whitePiecesTaken } from "../pieces/whitePieces";
+import { blackPiecesTaken } from "../pieces/blackPieces";
 
 export let legalMoves = [];
 
@@ -153,7 +155,9 @@ export const deactivatePiece = (e, socket, playerRef, grid, width) => {
     whitePieces,
     blackPieces,
     grid,
-    width
+    width,
+    whitePiecesTaken,
+    blackPiecesTaken
   );
 
   if (pieceToChange.color === "white") {
@@ -174,12 +178,27 @@ export const deactivatePiece = (e, socket, playerRef, grid, width) => {
       pieceToChange.color === "white" ? "black" : "white",
       grid,
       width,
-      playerRef.current
+      playerRef.current,
+      whitePiecesTaken,
+      blackPiecesTaken
     ) === true
   )
     return;
-  if (doDraw(blackPieces, whitePieces, socket, playerRef.current) === true)
+  if (
+    doDraw(
+      blackPieces,
+      whitePieces,
+      socket,
+      playerRef.current,
+      whitePiecesTaken,
+      blackPiecesTaken
+    ) === true
+  )
     return;
-  socket.emit("send-message", { white: whitePieces, black: blackPieces });
+  socket.emit("send-message", {
+    white: whitePieces,
+    black: blackPieces,
+    taken: { white: whitePiecesTaken, black: blackPiecesTaken },
+  });
   playerRef.current.turn = false;
 };
