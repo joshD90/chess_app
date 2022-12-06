@@ -11,6 +11,7 @@ import { doCheckmate } from "./doCheckmate";
 import { doDraw } from "./doDraw";
 import { whitePiecesTaken } from "../pieces/whitePieces";
 import { blackPiecesTaken } from "../pieces/blackPieces";
+import { activateEnPassante } from "../enPassante/activateEnPassante";
 
 export let legalMoves = [];
 
@@ -92,6 +93,7 @@ export const deactivatePiece = (e, socket, playerRef, grid, width) => {
       );
     })
   ) {
+    console.log(legalMoves, "legalmoves in deactivate top level");
     //keep the same position but deactivate
     return pieceToChange.color === "white"
       ? (whitePieces[index].activated = false)
@@ -161,11 +163,13 @@ export const deactivatePiece = (e, socket, playerRef, grid, width) => {
   );
 
   if (pieceToChange.color === "white") {
+    activateEnPassante(whitePieces[index], newSquare);
     whitePieces[index].position.letter = newSquare.an.letter;
     whitePieces[index].position.num = newSquare.an.number;
     whitePieces[index].activated = false;
     whitePieces[index].firstMove = false;
   } else {
+    activateEnPassante(blackPieces[index], newSquare);
     blackPieces[index].position.letter = newSquare.an.letter;
     blackPieces[index].position.num = newSquare.an.number;
     blackPieces[index].activated = false;

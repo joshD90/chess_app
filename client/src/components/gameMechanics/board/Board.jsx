@@ -9,6 +9,7 @@ import { whitePieces, whitePiecesTaken } from "../pieces/whitePieces";
 import WaitingSpinner from "./WaitingSpinner";
 import Clock from "./Clock";
 import SideCanvas from "../sideCanvas/SideCanvas";
+import { removeEnPassante } from "../enPassante/removeEnPassante";
 
 function Board() {
   const socket = useContext(SocketContext);
@@ -76,6 +77,9 @@ function Board() {
         blackPiecesTaken.length,
         ...pieces.taken.black
       );
+      playerRef.current.color === "white"
+        ? removeEnPassante(whitePieces)
+        : removeEnPassante(blackPieces);
     });
     //on winning
     socket.on("player-win", (winObj) => {

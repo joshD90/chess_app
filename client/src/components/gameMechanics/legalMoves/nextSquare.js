@@ -61,6 +61,13 @@ export const checkNextSquare = (
     blackPieces
   );
   if (nextSquareStatus === "own") return null;
+  if (
+    nextSquareStatus === "enPassante" &&
+    removeNumber(selectedPiece.type) === "pawn" &&
+    (direction !== "up" || direction !== "down")
+  )
+    return legalMoves.push({ square: nextSquare, status: nextSquareStatus });
+
   if (nextSquareStatus === "enemy") {
     //pawn only can attack in a diagonal manner so if the enemy is straight on return null
     if (
