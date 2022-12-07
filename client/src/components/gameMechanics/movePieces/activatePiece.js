@@ -26,7 +26,16 @@ export const activatePiece = (e, player, grid, width, socket) => {
   if (!myTurn) return;
 
   if (checkPawnQueening(myColor))
-    return selectPawnSub(e, position, socket, player, width);
+    return selectPawnSub(
+      e,
+      position,
+      socket,
+      player,
+      width,
+      whitePiecesTaken,
+      blackPiecesTaken,
+      grid
+    );
 
   //check all pieces, once we add in user controls we will just be checking either white or black pieces
   const allPieces = myColor === "white" ? whitePieces : blackPieces;
@@ -50,7 +59,8 @@ export const activatePiece = (e, player, grid, width, socket) => {
     grid,
     width,
     shallowWhitePieces,
-    shallowBlackPieces
+    shallowBlackPieces,
+    false
   );
 
   //we find the index of the piece so that when we change it we are not just changing the shallow copy of the array

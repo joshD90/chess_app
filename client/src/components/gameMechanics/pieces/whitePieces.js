@@ -179,3 +179,4 @@ export const whitePieces = [
 ];
 
 export const whitePiecesTaken = [];
+export const defaultWhitePieces = JSON.parse(JSON.stringify(whitePieces));

@@ -12,7 +12,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={socket && <Homepage />} />
-        <Route path="/game" element={socket && <BoardContainer />} />
+        <Route path="/game/:duration" element={socket && <BoardContainer />} />
       </Routes>
     </Router>
   );

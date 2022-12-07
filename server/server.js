@@ -10,18 +10,24 @@ io.on("connection", (socket) => {
   //this grabs all the rooms that are currently attached to io
   const rooms = io.of("/").adapter.rooms;
 
+  socket.on("disconnecting", () => {
+    const roomLeft = Array.from(socket.rooms)[1];
+    io.to(roomLeft).emit("player-disconnect");
+  });
+
   //when the user sends over his name we attach it to socket data
   socket.on("send-name", (name) => {
     socket.data.username = name;
     socket.emit("set-name", name);
   });
 
-  socket.on("join-game", () => {
-    console.log(socket.data, "in join room");
+  socket.on("join-game", ({ duration }) => {
+    if (Array.from(socket.rooms)[1]) socket.leave(Array.from(socket.rooms)[1]);
     //add this socket to dynamically set rooms
-    assignRooms(socket, rooms);
+    assignRooms(socket, rooms, duration);
     //get our room name so that we can emit events
     const myRoom = [...socket.rooms][1];
+
     //assign turn to player once room is filled
     assignColor(socket, io);
   });
@@ -30,6 +36,7 @@ io.on("connection", (socket) => {
   socket.on("send-message", (message) => {
     const myRoom = [...socket.rooms][1];
     socket.to(myRoom).emit("update-pieces", message);
+    socket.to(myRoom).emit("test-listener", { message: "hello" });
   });
   //see whether there has been checkmate or not
   socket.on("checkmated", (obj) => {

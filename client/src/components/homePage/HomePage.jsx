@@ -20,8 +20,8 @@ function HomePage() {
   };
   const submitGame = (e) => {
     e.preventDefault();
-    socket.emit("join-game");
-    navigate("/game");
+    socket.emit("join-game", { duration: duration });
+    navigate(`/game/${duration}`);
   };
 
   useEffect(() => {

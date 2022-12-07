@@ -179,3 +179,5 @@ export const blackPieces = [
 ];
 
 export const blackPiecesTaken = [];
+
+export const defaultBlackPieces = JSON.parse(JSON.stringify(blackPieces));

@@ -1,8 +1,18 @@
 import { checkPawnQueening } from "./checkPawnQueening";
 import { whitePieces } from "../pieces/whitePieces";
 import { blackPieces } from "../pieces/blackPieces";
+import { checkSquareAttacked } from "../movePieces/doCheck";
 
-export const selectPawnSub = (e, position, socket, player, width) => {
+export const selectPawnSub = (
+  e,
+  position,
+  socket,
+  player,
+  width,
+  whitePiecesTaken,
+  blackPiecesTaken,
+  grid
+) => {
   const pawnOptions = [
     {
       type: "queen",
@@ -72,6 +82,32 @@ export const selectPawnSub = (e, position, socket, player, width) => {
   pieceToChange.movementDirection = newType.movementDirection;
   pieceToChange.range = newType.range;
 
-  socket.emit("send-message", { white: whitePieces, black: blackPieces });
+  //check whether the pawn promotion has put the king in check and return king in check as true
+  const defendingColor = player.color === "white" ? "black" : "white";
+  const adjustedWhitePieces = JSON.parse(JSON.stringify(whitePieces));
+  const adjustedBlackPieces = JSON.parse(JSON.stringify(blackPieces));
+  const squareToCheck =
+    player.color === "white"
+      ? blackPieces.find((piece) => piece.type === "king")
+      : whitePieces.find((piece) => piece.type === "king");
+
+  if (
+    checkSquareAttacked(
+      defendingColor,
+      adjustedWhitePieces,
+      adjustedBlackPieces,
+      squareToCheck,
+      grid,
+      width,
+      player.color
+    ) === true
+  )
+    squareToCheck.inCheck = true;
+
+  socket.emit("send-message", {
+    white: whitePieces,
+    black: blackPieces,
+    taken: { white: whitePiecesTaken, black: blackPiecesTaken },
+  });
   player.turn = false;
 };

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function Clock({ player }) {
-  const [seconds, setSeconds] = useState(600);
-
+function Clock({ player, seconds, setSeconds }) {
   useEffect(() => {
     const reduceSecond = () => {
       if (!player.current.turn) return;

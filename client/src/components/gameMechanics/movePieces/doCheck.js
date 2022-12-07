@@ -46,7 +46,8 @@ export const doCheck = (colorOfKing, grid, width, pieceChanged) => {
       adjustedBlack,
       kingSquare,
       grid,
-      width
+      width,
+      pieceChanged.color
     ) === true
   ) {
     return true;
@@ -65,7 +66,8 @@ export const checkSquareAttacked = (
   adjustedBlackPieces,
   squareToCheck,
   grid,
-  width
+  width,
+  pieceChangedColor
 ) => {
   //we want to accumulate all legal moves of all pieces belonging to the opposing side and push them into this array
   const legalMovesCumulate = [];
@@ -80,7 +82,8 @@ export const checkSquareAttacked = (
         grid,
         width,
         adjustedWhitePieces,
-        adjustedBlackPieces
+        adjustedBlackPieces,
+        pieceChangedColor === defendingColor ? true : false
       )
     );
   });

@@ -1,15 +1,35 @@
-import React, { useEffect, useRef, useContext, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useContext,
+  useState,
+  useCallback,
+} from "react";
+import { useParams } from "react-router-dom";
 import "./BoardStyles.scss";
 import Canvas from "../../Canvas";
 import { createGrid } from "./createGrid";
 import { activatePiece, deactivatePiece } from "../movePieces/activatePiece";
 import { SocketContext } from "../../../context/SocketContext";
-import { blackPieces, blackPiecesTaken } from "../pieces/blackPieces";
-import { whitePieces, whitePiecesTaken } from "../pieces/whitePieces";
+import {
+  blackPieces,
+  blackPiecesTaken,
+  defaultBlackPieces,
+} from "../pieces/blackPieces";
+import {
+  defaultWhitePieces,
+  whitePieces,
+  whitePiecesTaken,
+} from "../pieces/whitePieces";
 import WaitingSpinner from "./WaitingSpinner";
 import Clock from "./Clock";
 import SideCanvas from "../sideCanvas/SideCanvas";
 import { removeEnPassante } from "../enPassante/removeEnPassante";
+import {
+  sockColorListen,
+  socketListenerOff,
+  socketListenerOn,
+} from "../socketListeners/socketListenerOn";
 
 function Board() {
   const socket = useContext(SocketContext);
@@ -18,8 +38,12 @@ function Board() {
   const [playerName, setPlayerName] = useState("");
   const [width, setWidth] = useState(window.innerWidth * 0.5);
   const [winBannerText, setWinBannerText] = useState(null);
+
   const playerColor = useRef();
   const playerRef = useRef({ turn: false, color: "" });
+  const { duration } = useParams();
+  const [seconds, setSeconds] = useState(duration * 60);
+  console.log(duration);
 
   // useEffect(() => {
   //   const handleResize = () => {
@@ -37,15 +61,40 @@ function Board() {
   //create a link to the actual DOM canvas element
   const canvasRef = useRef();
   let grid;
+
   useEffect(() => {
+    socketListenerOn(socket);
+    socket.on("player-disconnect", () => {
+      setWinBannerText(
+        "Other Player Has Disconnected. Connecting with New Game"
+      );
+      playerRef.current.turn = false;
+      socket.emit("join-game", { duration: duration });
+    });
+
     //setting player color and starting off turn.  Create a grid based on the player's color
     socket.on("color-set", (colorObj) => {
+      console.log(defaultBlackPieces, defaultWhitePieces, "default");
+      blackPieces.splice(
+        0,
+        defaultBlackPieces.length,
+        ...JSON.parse(JSON.stringify(defaultBlackPieces))
+      );
+      whitePieces.splice(
+        0,
+        defaultWhitePieces.length,
+        ...JSON.parse(JSON.stringify(defaultWhitePieces))
+      );
+      whitePiecesTaken.splice(0, whitePiecesTaken.length);
+      blackPiecesTaken.splice(0, blackPiecesTaken.length);
       setPlayerName(
         colorObj.names.filter((player) => player.id === socket.id)[0].name
       );
       setOpponentName(
         colorObj.names.filter((player) => player.id !== socket.id)[0].name
       );
+      setSeconds(duration * 60);
+      setWinBannerText("");
       if (socket.id === colorObj.white) {
         playerRef.current.turn = true;
         playerRef.current.color = "white";
@@ -61,10 +110,10 @@ function Board() {
         playerColor.current = "black";
       }
     });
+
     //every turn this is passed over to the other player
     socket.on("update-pieces", (pieces) => {
       playerRef.current.turn = true;
-
       whitePieces.splice(0, whitePieces.length, ...pieces.white);
       blackPieces.splice(0, blackPieces.length, ...pieces.black);
       whitePiecesTaken.splice(
@@ -116,6 +165,8 @@ function Board() {
       );
     });
     return () => {
+      socketListenerOff(socket);
+      socket.off("player-disconnect");
       socket.off("update-pieces");
       socket.off("color-set");
       socket.off("player-win");
@@ -155,7 +206,11 @@ function Board() {
         {playerRef && (
           <div className="topDiv">
             <h3>You are connected with {opponentName}</h3>
-            <Clock player={playerRef} />
+            <Clock
+              player={playerRef}
+              seconds={seconds}
+              setSeconds={setSeconds}
+            />
           </div>
         )}
         <div className="takenDiv">
