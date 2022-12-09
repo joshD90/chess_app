@@ -1,14 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { blackPieces, blackPiecesTaken } from "../pieces/blackPieces";
+import { whitePieces, whitePiecesTaken } from "../pieces/whitePieces";
+import { SocketContext } from "../../../context/SocketContext";
 
-function Clock({ player, seconds, setSeconds }) {
+function Clock({ player, seconds, setSeconds, ownClock, active }) {
+  const socket = useContext(SocketContext);
+
   useEffect(() => {
     const reduceSecond = () => {
-      if (!player.current.turn) return;
-      setSeconds((prev) => prev - 1);
+      console.log(active);
+      if (!active) return;
+      if (ownClock && !player.current.turn) return;
+      if (!ownClock && player.current.turn) return;
+      if (seconds < 1) return;
+      setSeconds((prev) => {
+        if (prev === 0) {
+          return 0;
+        } else return prev - 1;
+      });
     };
-    const timer = setInterval(reduceSecond, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    socket.on("tick", reduceSecond);
+    return () => socket.off("tick");
+  }, [socket, active]);
+
+  useEffect(() => {
+    if (!ownClock) return;
+    if (seconds < 1) {
+      sendTimeout(socket, player);
+    }
+  }, [seconds]);
 
   return (
     <div>
@@ -22,5 +42,27 @@ function Clock({ player, seconds, setSeconds }) {
     </div>
   );
 }
+
+const sendTimeout = (socket, player) => {
+  if (player.current.color === "white" && blackPieces.length === 1)
+    return socket.emit("drawn", {
+      pieces: { black: blackPieces, white: whitePieces },
+      method: "timeout vs insufficient material",
+      taken: { white: whitePiecesTaken, black: blackPiecesTaken },
+    });
+  if (player.current.color === "black" && whitePieces.length === 1)
+    return socket.emit("drawn", {
+      pieces: { black: blackPieces, white: whitePieces },
+      method: "timeout vs insufficient material",
+      taken: { white: whitePiecesTaken, black: blackPiecesTaken },
+    });
+
+  socket.emit("timeout", {
+    winningPlayer: player.current.color === "white" ? "black" : "white",
+    pieces: { black: blackPieces, white: whitePieces },
+    taken: { white: whitePiecesTaken, black: blackPiecesTaken },
+  });
+  player.current.turn = false;
+};
 
 export default Clock;

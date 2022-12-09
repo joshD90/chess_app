@@ -1,3 +1,4 @@
+import { playSound } from "../board/playSound";
 import { checkSquareAttacked } from "../movePieces/doCheck";
 //when we land on a square that is notified as "enemy" in our legal moves array we remove this corresponding
 //piece from the other colors array
@@ -27,7 +28,6 @@ export const doTake = (
   )
     return;
 
-  console.log("WE HAVE REACHED THIS FAR");
   //we need to know which array of pieces we need to be updating
   const colorToChange =
     pieceToChange.color === "white" ? blackPieces : whitePieces;
@@ -88,4 +88,5 @@ export const doTake = (
     : whitePiecesTaken.push(colorToChange[index]);
   //splice to mutate the array
   colorToChange.splice(index, 1);
+  playSound("capture");
 };

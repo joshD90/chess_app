@@ -9,7 +9,7 @@ function WaitingSpinner({ grid }) {
       <div className="knightBackground rotate">
         <img src={knightBackground} className="" />
       </div>
-      Please Wait While We Find Someone To Play With You
+      <h1>Please Wait While We Find Someone To Play With You</h1>
       <div>
         {/* <CircularProgress
           style={{

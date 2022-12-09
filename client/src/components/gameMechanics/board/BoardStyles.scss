@@ -1,5 +1,7 @@
-$myColor: blue;
-$backgroundColor: beige;
+$backgroundColor: #eef5f8;
+$buttonDark: #a74611;
+$buttonLight: #ac5425;
+$fontColor: #03131c;
 
 .boardWrapper {
   width: 100vw;
@@ -9,17 +11,43 @@ $backgroundColor: beige;
   justify-content: center;
   align-items: center;
   background-color: $backgroundColor;
+  color: $fontColor;
+  font-family: sans-serif;
+  h1 {
+    text-align: center;
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  .playerNameDiv {
+    width: 100%;
+    height: 3rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.5rem;
+    @media (max-width: 480px) {
+      width: 105vw;
+      font-size: 1rem;
+    }
+  }
 }
 
 .boardDiv {
-  border: 1px solid $myColor;
-  background-color: $backgroundColor;
+  border: 10px solid gray;
+  background-color: gray;
+  padding: 0;
+  margin: 0;
 }
 
 .topDiv {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  @media (max-width: 480px) {
+    width: 100vw;
+  }
 }
 
 .takenDiv {
@@ -28,4 +56,10 @@ $backgroundColor: beige;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  .takeDiv {
+    @media (max-width: 780px) {
+      display: none;
+    }
+  }
 }

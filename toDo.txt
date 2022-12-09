@@ -1,12 +1,13 @@
- -- add in joining different rooms based on time of game
+ 
  -- add in notification of no games available in this time frame
  -- add in resize of screen (mouse Position not correct)
- -- add in timer change depending on game time selected (still needs to be dependent on selected game time)
+ -- add in opponents clock to screen - does this need to be updated periodically through the server?
 
- -- add in reallocation into different room on one player leaving that room after a time
- -- add in stability of game on reload ? is this possible, create custom useLocalStorage hook? Socket id based on name?
 
- -- do time out win
+ 
+ 
+
+ 
 
  done
   -- add in pawn queening
@@ -14,3 +15,8 @@
    -- add in draw conditions, stalemate,insufficient material
     -- add in pieces taken on the side of the board
      -- add in en passant functionality
+     -- add in joining different rooms based on time of game
+     -- add in reallocation into different room on one player leaving that room after a time
+     -- do time out win
+     -- add in timer change depending on game time selected (still needs to be dependent on selected game time)
+      -- add in draw by timeout vs insufficient material

@@ -9,7 +9,7 @@ export const doDraw = (
   blackPiecesTaken
 ) => {
   let drawn;
-  //this will be triggered on any draw condition
+  //this will be triggered on any insufficient material draw condition
   const sendDraw = () => {
     socket.emit("drawn", {
       pieces: { black: blackPieces, white: whitePieces },

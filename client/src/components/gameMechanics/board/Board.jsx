@@ -33,17 +33,24 @@ import {
 
 function Board() {
   const socket = useContext(SocketContext);
+  const windowWidth =
+    window.innerWidth < 480 ? window.innerWidth - 20 : window.innerWidth * 0.5;
   const [passableGrid, setPassableGrid] = useState(null);
   const [opponentName, setOpponentName] = useState("");
   const [playerName, setPlayerName] = useState("");
-  const [width, setWidth] = useState(window.innerWidth * 0.5);
+  const [timerActive, setTimerActive] = useState(true);
+  // const initialWidth =
+  //   window.innerWidth * 0.5 > window.innerHeight * 0.7
+  //     ? window.innerHeight * 0.7
+  //     : window.innerWidth * 0.5;
+  const [width, setWidth] = useState(windowWidth);
   const [winBannerText, setWinBannerText] = useState(null);
 
   const playerColor = useRef();
   const playerRef = useRef({ turn: false, color: "" });
   const { duration } = useParams();
   const [seconds, setSeconds] = useState(duration * 60);
-  console.log(duration);
+  const [oppSeconds, setOppSeconds] = useState(duration * 60);
 
   // useEffect(() => {
   //   const handleResize = () => {
@@ -93,19 +100,20 @@ function Board() {
       setOpponentName(
         colorObj.names.filter((player) => player.id !== socket.id)[0].name
       );
-      setSeconds(duration * 60);
+      setSeconds(duration * 10);
+      setOppSeconds(duration * 10);
       setWinBannerText("");
       if (socket.id === colorObj.white) {
         playerRef.current.turn = true;
         playerRef.current.color = "white";
-        grid = createGrid(width, "white");
+        grid = createGrid(windowWidth, "white");
         setPassableGrid(grid);
         playerColor.current = "white";
       }
       if (socket.id === colorObj.black) {
         playerRef.current.turn = false;
         playerRef.current.color = "black";
-        grid = createGrid(width, "black");
+        grid = createGrid(windowWidth, "black");
         setPassableGrid(grid);
         playerColor.current = "black";
       }
@@ -133,7 +141,7 @@ function Board() {
     //on winning
     socket.on("player-win", (winObj) => {
       setWinBannerText(
-        `${winObj.winningPlayer} is the winner by ${winObj.method}`
+        `${winObj.winningPlayer.toUpperCase()} is the Winner by ${winObj.method.toUpperCase()}`
       );
       whitePieces.splice(0, whitePieces.length, ...winObj.finalPosition.white);
       blackPieces.splice(0, blackPieces.length, ...winObj.finalPosition.black);
@@ -147,10 +155,11 @@ function Board() {
         blackPiecesTaken.length,
         ...winObj.taken.black
       );
+      setTimerActive(false);
     });
     //on drawing
     socket.on("player-draw", (drawObj) => {
-      setWinBannerText(`The Game is a Draw by ${drawObj.method}`);
+      setWinBannerText(`The Game is a Draw by ${drawObj.method.toUpperCase()}`);
       whitePieces.splice(0, whitePieces.length, ...drawObj.finalPosition.white);
       blackPieces.splice(0, blackPieces.length, ...drawObj.finalPosition.black);
       whitePiecesTaken.splice(
@@ -163,6 +172,7 @@ function Board() {
         blackPiecesTaken.length,
         ...drawObj.taken.black
       );
+      setTimerActive(false);
     });
     return () => {
       socketListenerOff(socket);
@@ -208,13 +218,17 @@ function Board() {
             <h3>You are connected with {opponentName}</h3>
             <Clock
               player={playerRef}
-              seconds={seconds}
-              setSeconds={setSeconds}
+              seconds={oppSeconds}
+              setSeconds={setOppSeconds}
+              ownClock={false}
+              active={timerActive}
             />
           </div>
         )}
         <div className="takenDiv">
-          <SideCanvas width={width} color="white" />
+          <div className="takeDiv">
+            <SideCanvas width={width} color="white" />
+          </div>
           <div className="boardDiv" ref={canvasRef}>
             <Canvas
               width={width}
@@ -222,9 +236,20 @@ function Board() {
               color={passableGrid && playerRef.current.color}
             />
           </div>
-          <SideCanvas width={width} color="black" />
+          <div className="takeDiv">
+            <SideCanvas width={width} color="black" />
+          </div>
         </div>
-        <h3>{playerName}</h3>
+        <div className="playerNameDiv">
+          <h3>{playerName}</h3>
+          <Clock
+            player={playerRef}
+            seconds={seconds}
+            setSeconds={setSeconds}
+            ownClock={true}
+            active={timerActive}
+          />
+        </div>
       </div>
       <WaitingSpinner grid={passableGrid} />
     </div>

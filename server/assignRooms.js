@@ -7,7 +7,6 @@ const assignRooms = (socket, rooms, duration) => {
   if (actualRooms.length === 0) return socket.join(`room1-${duration}`);
   //we run through all of the rooms and see whether they are full.  If they are full then we join another room
   const spareRoom = actualRooms.find((room) => {
-    console.log(room[0].split("-")[1], "duration");
     return room[1].size < 2 && room[0].split("-")[1] == duration;
   });
 
@@ -20,6 +19,7 @@ const assignRooms = (socket, rooms, duration) => {
   //we check to see after 5 seconds whether another person has joined this new room and then we
   //go through the loop to reassign things again
   setTimeout(() => {
+    console.log(newRoom, "newROOm in setTimeout");
     const myRoom = rooms.get(newRoom);
     if (myRoom.size === 1) {
       socket.leave(newRoom);

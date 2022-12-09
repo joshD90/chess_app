@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../../context/SocketContext";
+
 import "./homeStyles.scss";
 
 function HomePage() {
@@ -43,10 +44,10 @@ function HomePage() {
               </div>
             </form>
           ) : (
-            <>
+            <div className="greetingDiv">
               <h1>Welcome {name}</h1>
               <h3>Please Select a Game Duration and Join a Game</h3>
-            </>
+            </div>
           )}
         </div>
         <div className="startGameDiv" style={{ height: startGameHeight + "%" }}>

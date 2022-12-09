@@ -1,5 +1,3 @@
-import { createGrid } from "../board/createGrid";
-
 //this function converts the algebraic notation of a pieces position into an x / y coordinate
 
 export const findCoord = (position, grid) => {

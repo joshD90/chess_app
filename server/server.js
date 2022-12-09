@@ -22,6 +22,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join-game", ({ duration }) => {
+    console.log("joining room");
     if (Array.from(socket.rooms)[1]) socket.leave(Array.from(socket.rooms)[1]);
     //add this socket to dynamically set rooms
     assignRooms(socket, rooms, duration);
@@ -50,9 +51,18 @@ io.on("connection", (socket) => {
       taken: { white: obj.taken.white, black: obj.taken.black },
     });
   });
+  socket.on("timeout", (obj) => {
+    const myRoom = [...socket.rooms][1];
+    console.log("Timeout!");
+    io.to(myRoom).emit("player-win", {
+      winningPlayer: obj.winningPlayer,
+      finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
+      method: "timeout",
+      taken: { white: obj.taken.white, black: obj.taken.black },
+    });
+  });
   //see whether there has been a stalemate
   socket.on("drawn", (obj) => {
-    console.log("drawn");
     const myRoom = [...socket.rooms][1];
     io.to(myRoom).emit("player-draw", {
       finalPosition: { black: obj.pieces.black, white: obj.pieces.white },
@@ -60,4 +70,8 @@ io.on("connection", (socket) => {
       taken: { white: obj.taken.white, black: obj.taken.black },
     });
   });
+
+  setInterval(() => {
+    io.to(socket.id).emit("tick");
+  }, [1000]);
 });

@@ -12,6 +12,7 @@ import { doDraw } from "./doDraw";
 import { whitePiecesTaken } from "../pieces/whitePieces";
 import { blackPiecesTaken } from "../pieces/blackPieces";
 import { activateEnPassante } from "../enPassante/activateEnPassante";
+import { playSound } from "../board/playSound";
 
 export let legalMoves = [];
 
@@ -214,5 +215,6 @@ export const deactivatePiece = (e, socket, playerRef, grid, width) => {
     black: blackPieces,
     taken: { white: whitePiecesTaken, black: blackPiecesTaken },
   });
+  playSound("move");
   playerRef.current.turn = false;
 };

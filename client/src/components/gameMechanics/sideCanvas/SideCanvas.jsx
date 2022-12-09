@@ -14,7 +14,7 @@ function SideCanvas({ width, color }) {
     const piecesTaken = color === "black" ? blackPiecesTaken : whitePiecesTaken;
 
     const adjusted = adjustedTaken(piecesTaken);
-    ctx.fillStyle = "beige";
+    ctx.fillStyle = "#eef5f8";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     adjusted.forEach((piece, index) => {
       drawPiece(ctx, width, {
