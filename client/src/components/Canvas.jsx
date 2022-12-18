@@ -46,14 +46,28 @@ function Canvas({ width, color, grid }) {
     const element = canvasRef.current;
     if (!element) return;
     const doMouseMove = (e) => {
+      const x =
+        e.type === "touchmove" || e.type === "touchstart"
+          ? e.touches[0].clientX - e.target.offsetLeft
+          : e.clientX - e.target.offsetLeft;
+      const y =
+        e.type === "touchmove" || e.type === "touchstart"
+          ? e.touches[0].clientY - e.target.offsetTop
+          : e.clientY - e.target.offsetTop;
       mousePosRef.current = {
-        x: e.clientX - canvasRef.current.offsetLeft,
-        y: e.clientY - canvasRef.current.offsetTop,
+        x: x,
+        y: y,
       };
     };
+    element.addEventListener("touchstart", doMouseMove);
     element.addEventListener("mousemove", doMouseMove);
+    element.addEventListener("touchmove", doMouseMove);
     //clean up
-    return () => element.removeEventListener("mousemove", doMouseMove);
+    return () => {
+      element.removeEventListener("touchstart", doMouseMove);
+      element.removeEventListener("mousemove", doMouseMove);
+      element.removeEventListener("touchmove", doMouseMove);
+    };
   }, [canvasRef, canvasRef.current]);
 
   return <canvas ref={canvasRef} width={width} height={width} />;

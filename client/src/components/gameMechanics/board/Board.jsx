@@ -71,6 +71,9 @@ function Board() {
 
   useEffect(() => {
     socketListenerOn(socket);
+    socket.on("connect", () => {
+      console.log("Connected with socket");
+    });
     socket.on("player-disconnect", () => {
       setWinBannerText(
         "Other Player Has Disconnected. Connecting with New Game"
@@ -176,6 +179,7 @@ function Board() {
     });
     return () => {
       socketListenerOff(socket);
+      socket.off("connect");
       socket.off("player-disconnect");
       socket.off("update-pieces");
       socket.off("color-set");
@@ -190,10 +194,12 @@ function Board() {
     const element = canvasRef.current;
     //drop the piece
     const doMouseUp = (e) => {
+      e.preventDefault();
       deactivatePiece(e, socket, playerRef, grid, width);
     };
     //activate piece
     const doMouseDown = (e) => {
+      e.preventDefault();
       playerRef.current &&
         activatePiece(e, playerRef.current, grid, width, socket);
     };
@@ -201,11 +207,15 @@ function Board() {
     //when our canvas component mounts we add a listener to see what the mouse is doing so that pieces can be moved accordingly
     element.addEventListener("mousedown", doMouseDown);
     element.addEventListener("mouseup", doMouseUp);
+    element.addEventListener("touchstart", doMouseDown);
+    element.addEventListener("touchend", doMouseUp);
 
     return () => {
       //we remove the event listeners on component dismounted making sure that listeners don't build on top of each other
       element.removeEventListener("mousedown", activatePiece);
       element.removeEventListener("mouseup", deactivatePiece);
+      element.removeEventListener("touchstart", activatePiece);
+      element.removeEventListener("touchend", deactivatePiece);
     };
   }, [socket, playerRef.current, width]);
 

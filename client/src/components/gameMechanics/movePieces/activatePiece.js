@@ -18,12 +18,21 @@ export let legalMoves = [];
 
 //if the user clicks on a piece we set it to activate so that we know whether to draw it on the mouse point or not
 export const activatePiece = (e, player, grid, width, socket) => {
+  const x =
+    e.type === "touchstart"
+      ? e.touches[0].clientX - e.target.offsetLeft
+      : e.clientX - e.target.offsetLeft;
+  const y =
+    e.type === "touchstart"
+      ? e.touches[0].clientY - e.target.offsetTop
+      : e.clientY - e.target.offsetTop;
   const myTurn = player.turn;
   const myColor = player.color;
   const position = {
-    x: e.clientX - e.target.offsetLeft,
-    y: e.clientY - e.target.offsetTop,
+    x: x,
+    y: y,
   };
+
   if (!myTurn) return;
 
   if (checkPawnQueening(myColor))
@@ -76,10 +85,20 @@ export const activatePiece = (e, player, grid, width, socket) => {
 
 //when we lift the mouse button we wish to drop the piece
 export const deactivatePiece = (e, socket, playerRef, grid, width) => {
+  const x =
+    e.type === "touchend"
+      ? e.changedTouches[0].clientX - e.target.offsetLeft
+      : e.clientX - e.target.offsetLeft;
+  const y =
+    e.type === "touchend"
+      ? e.changedTouches[0].clientY - e.target.offsetTop
+      : e.clientY - e.target.offsetTop;
+
   const position = {
-    x: e.clientX - e.target.offsetLeft,
-    y: e.clientY - e.target.offsetTop,
+    x: x,
+    y: y,
   };
+  console.log(position, "position");
 
   //check all pieces this will be changed once player turns are implemented
   const allPieces = [...whitePieces, ...blackPieces];

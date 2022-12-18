@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "./static/css/main.d99e6c56.css",
+    "main.js": "./static/js/main.6d7dc49e.js",
+    "static/media/chessBackground.webp": "./static/media/chessBackground.56789a8fa30ec7239c0f.webp",
+    "static/media/knightBackground.webp": "./static/media/knightBackground.db87158f88faa880ea5a.webp",
+    "static/media/capture.mp3": "./static/media/capture.79c343c9a73327f96d37.mp3",
+    "static/media/move.mp3": "./static/media/move.f4280e96965e14433c3b.mp3",
+    "static/media/black_rook.svg": "./static/media/black_rook.fdc575582c2cbe2ec82093702945226f.svg",
+    "static/media/black_knight.svg": "./static/media/black_knight.7930be9e07b51bc0e069b1d77e31261a.svg",
+    "static/media/black_king.svg": "./static/media/black_king.6c8cc8fabe5215cc854dec67ee7781fd.svg",
+    "static/media/black_queen.svg": "./static/media/black_queen.cf388bf415c0d33ec16f23593b8d0d91.svg",
+    "static/media/white_knight.svg": "./static/media/white_knight.d47944d2cee4f8c707d1907706c142fa.svg",
+    "static/media/black_bishop.svg": "./static/media/black_bishop.04932f63ef10dcdee115b649286230f5.svg",
+    "static/media/white_bishop.svg": "./static/media/white_bishop.aa411d5809c6380713b4312d55aafc53.svg",
+    "static/media/white_rook.svg": "./static/media/white_rook.9e48b84f189eea24339f8a679e7a664f.svg",
+    "static/media/white_queen.svg": "./static/media/white_queen.7a1aecff0f22ff68c43f9b7f8a81d0b4.svg",
+    "static/media/black_pawn.svg": "./static/media/black_pawn.be5d44ca5ee868885d216188996e3a00.svg",
+    "static/media/white_pawn.svg": "./static/media/white_pawn.50273cc6d86861932d0a01c38274009a.svg",
+    "static/media/white_king.svg": "./static/media/white_king.5d58f1999749c1b5ef5bc1699c38b2f7.svg",
+    "index.html": "./index.html",
+    "main.d99e6c56.css.map": "./static/css/main.d99e6c56.css.map",
+    "main.6d7dc49e.js.map": "./static/js/main.6d7dc49e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d99e6c56.css",
+    "static/js/main.6d7dc49e.js"
+  ]
+}
